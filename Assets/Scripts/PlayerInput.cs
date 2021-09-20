@@ -42,7 +42,6 @@ public class PlayerInput : MonoBehaviour
         //Problem that it skip dir if current dir changes 2 times in update but movement not happened
         _currentDirection = _directionsQueue.Dequeue();
         _newPosition = _currenPosition + _currentDirection;
-
     }
     private IEnumerator AutomaticMovement()
     {
