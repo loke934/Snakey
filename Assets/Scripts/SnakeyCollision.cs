@@ -6,27 +6,22 @@ using UnityEngine.Events;
 
 public class SnakeyCollision : MonoBehaviour
 {
-    public UnityEvent OnGameOver;
+    [SerializeField] 
+    private Canvas canvas;
+    public event Action OnGameOver;
+    
 
     private void OnCollisionEnter2D(Collision2D other)
     {
-        Debug.Log("col");
-        if (other.gameObject.CompareTag("Wall"))
+        if (other.gameObject.CompareTag("Wall") || other.gameObject.CompareTag("Snake"))
         {
-            Debug.Log("Wall");
-            OnGameOver.Invoke();
-        }
-        
-        if (other.gameObject.CompareTag("Snake"))
-        {
-            Debug.Log("Snake");
-            OnGameOver.Invoke();
+            OnGameOver?.Invoke();
+            canvas.gameObject.SetActive(true);
         }
     }
 
-    private void Awake()
+    private void Start()
     {
-        OnGameOver = new UnityEvent();
-        //Add listener to event
+        OnGameOver += GetComponent<PlayerInput>().GameOver;
     }
 }

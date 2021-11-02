@@ -6,19 +6,15 @@ using UnityEngine.Events;
 
 public class ItemBehaviour : MonoBehaviour
 {
-    public UnityEvent OnItemEaten = new UnityEvent();
-
-    private ItemSpawn _itemSpawner;
-
+    public event Action OnItemEaten;
+    
     private void OnTriggerEnter2D(Collider2D other)
     {
-        OnItemEaten.Invoke();
-        Destroy(gameObject);
-    }
-    
-    private void Start()
-    {
-        _itemSpawner = FindObjectOfType<ItemSpawn>();
-        OnItemEaten.AddListener(_itemSpawner.ItemEaten);
+        if (other.TryGetComponent<AddSnakeyPart>(out var addSnakeyPart))
+        {
+            addSnakeyPart.Grow();
+            OnItemEaten?.Invoke();
+            Destroy(gameObject);
+        }
     }
 }

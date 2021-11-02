@@ -12,21 +12,12 @@ public class SpawnGrid : MonoBehaviour
     [SerializeField, Range(5f, 20)] private int gridSizeY = 15;
 
     private List<Vector2Int> _gridPositionsList;
-    private List<Vector2Int> _itemsCanSpawnPositionsList;
 
     public List<Vector2Int> GridPositionsList
     {
         get
         {
             return _gridPositionsList;
-        }
-    }
-
-    public List<Vector2Int> ItemsCanSpawnPositionList
-    {
-        get
-        {
-            return _itemsCanSpawnPositionsList;
         }
     }
 
@@ -37,7 +28,7 @@ public class SpawnGrid : MonoBehaviour
             for (int x = 0; x < gridSizeX; x++)
             {
                 GameObject tileToSpawn;
-                if (x  == 0 || x == gridSizeX -1 || y == 0 || y == gridSizeY -1 ) //make to variables, names?
+                if (x  == 0 || x == gridSizeX -1 || y == 0 || y == gridSizeY -1 ) //edges of grid should have walls
                 {
                     tileToSpawn = wallPrefab;
                 }
@@ -48,21 +39,18 @@ public class SpawnGrid : MonoBehaviour
                 Vector2 spawnPosition = new Vector2((int)-gridSizeX/2 + x, (int)-gridSizeY/2 + y);
                 GameObject tile = Instantiate(tileToSpawn, spawnPosition, Quaternion.identity);
                 tile.transform.SetParent(transform);
-                
-                Vector2Int positionToAdd = new Vector2Int((int)-gridSizeX/2 + x,(int)-gridSizeY/2 + y);
-                _gridPositionsList.Add(positionToAdd);
+
+                Vector2Int positionToAdd = new Vector2Int((int)-gridSizeX/2 + x,(int)-gridSizeY/2 + y);//use above how??
                 if (tileToSpawn == tilePrefab)
                 {
-                    _itemsCanSpawnPositionsList.Add(positionToAdd);
+                    _gridPositionsList.Add(positionToAdd);
                 }
-                   
             }
         }
     }
     private void Awake()
     {
         _gridPositionsList = new List<Vector2Int>();
-        _itemsCanSpawnPositionsList = new List<Vector2Int>();
         SpawnTheGrid();
     }
 
