@@ -15,8 +15,7 @@ public class ItemSpawn : MonoBehaviour
 
     private List<Vector2Int> positions;
     private GameObject itemInScene;
-
-
+    
     public void SpawnItem()
     {
         int index = Random.Range(0, positions.Count - 1);
@@ -26,12 +25,9 @@ public class ItemSpawn : MonoBehaviour
         itemInScene.GetComponent<ItemBehaviour>().OnItemEaten += SpawnItem;
         playerInput.IncreaseSpeed();
     }
-
     void Start()
     {
         positions = gridSpawner.GridPositionsList;
         SpawnItem();
     }
-
-    /*not working with unity events, spawning multiple or only once*/
 }

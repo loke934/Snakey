@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 public class PlayerInput : MonoBehaviour
 {
@@ -18,9 +19,11 @@ public class PlayerInput : MonoBehaviour
     
     private Vector2Int currenPosition;
     private Vector2Int newPosition;
-    private List<Vector2Int> positions;
+    private List<Vector2Int> positionsList;
+    [SerializeField]
     private SpawnGrid gridSpawner;
 
+    [SerializeField]
     private float currentSpeed = 0.7f;
     private float maxSpeed = 0.1f;
 
@@ -48,9 +51,9 @@ public class PlayerInput : MonoBehaviour
         }
         return rotation;
     }
-    private Vector2Int DirectionToVector2Int(Direction dir)
+    private Vector2Int DirectionToPosition()
     {
-        switch (dir)
+        switch (currentDirection)
         {
             case Direction.up:
                 return Vector2Int.up;
@@ -70,7 +73,6 @@ public class PlayerInput : MonoBehaviour
     }
     private void SetDirection()
     {
-        currenPosition = new Vector2Int((int) transform.position.x, (int) transform.position.y);
         if (Input.GetKeyDown(KeyCode.W))
         {
             currentDirection = Direction.up;
@@ -94,9 +96,9 @@ public class PlayerInput : MonoBehaviour
         while (!gameOver)
         {
             yield return new WaitForSeconds(currentSpeed);
-            
-            newPosition = currenPosition + DirectionToVector2Int(currentDirection);
-            if (positions.Contains(newPosition))
+            currenPosition = new Vector2Int((int) transform.position.x, (int) transform.position.y);
+            newPosition = currenPosition + DirectionToPosition();
+            if (positionsList.Contains(newPosition))
             {
                 Vector3 previousPos = transform.position;
                 OnMovement?.Invoke(previousPos);
@@ -119,13 +121,12 @@ public class PlayerInput : MonoBehaviour
     }
     private void Awake()
     {
-        gridSpawner = FindObjectOfType<SpawnGrid>().GetComponent<SpawnGrid>();
         StartCoroutine(AutomaticMovement());
     }
     
     void Start()
     {
-        positions = gridSpawner.GridPositionsList;
+        positionsList = gridSpawner.GridPositionsList;
     }
 
     private void Update()

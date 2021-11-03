@@ -6,34 +6,29 @@ using UnityEngine;
 
 public class AddSnakeyPart : MonoBehaviour
 {
-    [SerializeField] private GameObject snakeyBodyPart;
+    [SerializeField] 
+    private GameObject snakeyBodyPart;
     private LinkedList<Transform> snakeyBody = new LinkedList<Transform>();
-
     
-    private void Awake()
+    private void MoveSnakeyBody(Vector3 snakeHeadPosition)
     {
-        PlayerInput.OnMovement += PlayerInputOnMovement; 
-    }
-
-    private void PlayerInputOnMovement(Vector3 previousPosition)
-    {
-        if (snakeyBody.Count <= 0)
+        if (snakeyBody.Count <= 0)//only head on snake
         {
             return;
         }
 
-        var snakePart = snakeyBody.Tail;
-        while (snakePart != null)
+        LinkedList<Transform>.ListNode currentNode = snakeyBody.Tail;
+        while (currentNode != null)
         {
-            if (snakePart == snakeyBody.Head)
+            if (currentNode == snakeyBody.Head)
             {
-                snakePart.nodeItem.position = previousPosition;
+                currentNode.nodeItem.position = snakeHeadPosition;
             }
             else
             {
-                snakePart.nodeItem.position = snakePart.previousNode.nodeItem.position;
+                currentNode.nodeItem.position = currentNode.previousNode.nodeItem.position;
             }
-            snakePart = snakePart.previousNode;
+            currentNode = currentNode.previousNode;
         }
     }
 
@@ -51,5 +46,10 @@ public class AddSnakeyPart : MonoBehaviour
             return transform.position;
         }
         return snakeyBody.Tail.nodeItem.position;
+    }
+    
+    private void Awake()
+    {
+        PlayerInput.OnMovement += MoveSnakeyBody; 
     }
 }

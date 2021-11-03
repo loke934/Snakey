@@ -10,7 +10,6 @@ public class SnakeyCollision : MonoBehaviour
     private Canvas canvas;
     public event Action OnGameOver;
     
-
     private void OnCollisionEnter2D(Collision2D other)
     {
         if (other.gameObject.CompareTag("Wall") || other.gameObject.CompareTag("Snake"))
@@ -19,9 +18,10 @@ public class SnakeyCollision : MonoBehaviour
             canvas.gameObject.SetActive(true);
         }
     }
-
+    
     private void Start()
-    {
-        OnGameOver += GetComponent<PlayerInput>().GameOver;
+    { 
+        OnGameOver += GetComponentInParent<PlayerInput>().GameOver;
     }
+    //FIX COLLISION WITH WALLS, MAKE SO OUTSIDE OF GRID OR COLLIDE WITH WALLS BUT HOW TO AVOID...
 }

@@ -6,20 +6,18 @@ using UnityEngine;
 
 public class SpawnGrid : MonoBehaviour
 {
-    [SerializeField] private GameObject tilePrefab;
-    [SerializeField] private GameObject wallPrefab;
-    [SerializeField, Range(5f, 20)] private int gridSizeX = 15;
-    [SerializeField, Range(5f, 20)] private int gridSizeY = 15;
+    [SerializeField] 
+    private GameObject tilePrefab;
+    [SerializeField] 
+    private GameObject wallPrefab;
+    [SerializeField, Range(5f, 20)] 
+    private int gridSizeX = 15;
+    [SerializeField, Range(5f, 20)] 
+    private int gridSizeY = 15;
 
-    private List<Vector2Int> _gridPositionsList;
+    private List<Vector2Int> gridPositionsList;
 
-    public List<Vector2Int> GridPositionsList
-    {
-        get
-        {
-            return _gridPositionsList;
-        }
-    }
+    public List<Vector2Int> GridPositionsList => gridPositionsList;
 
     private void SpawnTheGrid()
     {
@@ -43,15 +41,14 @@ public class SpawnGrid : MonoBehaviour
                 Vector2Int positionToAdd = new Vector2Int((int)-gridSizeX/2 + x,(int)-gridSizeY/2 + y);//use above how??
                 if (tileToSpawn == tilePrefab)
                 {
-                    _gridPositionsList.Add(positionToAdd);
+                    gridPositionsList.Add(positionToAdd);
                 }
             }
         }
     }
     private void Awake()
     {
-        _gridPositionsList = new List<Vector2Int>();
+        gridPositionsList = new List<Vector2Int>();
         SpawnTheGrid();
     }
-
 }
