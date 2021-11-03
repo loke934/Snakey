@@ -8,7 +8,7 @@ public class SnakeyCollision : MonoBehaviour
 {
     [SerializeField] 
     private Canvas canvas;
-    public event Action OnGameOver;
+    public static event Action OnGameOver;
     
     private void OnCollisionEnter2D(Collision2D other)
     {
@@ -18,10 +18,5 @@ public class SnakeyCollision : MonoBehaviour
             canvas.gameObject.SetActive(true);
         }
     }
-    
-    private void Start()
-    { 
-        OnGameOver += GetComponentInParent<PlayerInput>().GameOver;
-    }
-    //FIX COLLISION WITH WALLS, MAKE SO OUTSIDE OF GRID OR COLLIDE WITH WALLS BUT HOW TO AVOID...
+    //Todo FIX COLLISION WITH WALLS, MAKE SO OUTSIDE OF GRID OR COLLIDE WITH WALLS BUT HOW TO AVOID...
 }

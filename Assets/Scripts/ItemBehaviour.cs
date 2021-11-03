@@ -10,9 +10,9 @@ public class ItemBehaviour : MonoBehaviour
     
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.TryGetComponent<AddSnakeyPart>(out var addSnakeyPart))
+        if (other.TryGetComponent<SnakeyBodyBehaviour>(out var snakeyBodyBehaviour))
         {
-            addSnakeyPart.Grow();
+            snakeyBodyBehaviour.GrowBody();
             OnItemEaten?.Invoke();
             Destroy(gameObject);
         }

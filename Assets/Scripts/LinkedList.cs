@@ -24,7 +24,7 @@ public class LinkedList<T>
         public T nodeItem;
         public ListNode previousNode;
         public ListNode nextNode;
-        public int index = -1;
+        public int index = -1; //Not using, will need? Otherwise delete
         
         public ListNode(T item, ListNode previous, ListNode next, int i)
         {
@@ -35,11 +35,6 @@ public class LinkedList<T>
         }
     }
 
-    //Methods
-    /// <summary>
-    /// Adds item to a new node, to the end of the linked list.
-    /// </summary>
-    /// <param name="Node item, privious node, next node, count."></param>
     public void Add(T item)
     {
         ListNode newNode = new ListNode(item, tail, null, count);
@@ -54,5 +49,12 @@ public class LinkedList<T>
             tail = newNode;
         }
         count++;
+    }
+
+    public void Clear()
+    {
+        head = null;
+        tail = null;
+        count = 0;
     }
 }

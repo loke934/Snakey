@@ -18,7 +18,6 @@ public class PlayerInput : MonoBehaviour
     private Direction currentDirection;
     
     private Vector2Int currenPosition;
-    private Vector2Int newPosition;
     private List<Vector2Int> positionsList;
     [SerializeField]
     private SpawnGrid gridSpawner;
@@ -26,8 +25,7 @@ public class PlayerInput : MonoBehaviour
     [SerializeField]
     private float currentSpeed = 0.7f;
     private float maxSpeed = 0.1f;
-
-    private bool gameOver = false;
+    private bool gameOver;
 
     private Quaternion GetRotation()
     {
@@ -97,7 +95,7 @@ public class PlayerInput : MonoBehaviour
         {
             yield return new WaitForSeconds(currentSpeed);
             currenPosition = new Vector2Int((int) transform.position.x, (int) transform.position.y);
-            newPosition = currenPosition + DirectionToPosition();
+            Vector2Int newPosition = currenPosition + DirectionToPosition();
             if (positionsList.Contains(newPosition))
             {
                 Vector3 previousPos = transform.position;
@@ -121,6 +119,7 @@ public class PlayerInput : MonoBehaviour
     }
     private void Awake()
     {
+        SnakeyCollision.OnGameOver += GameOver;
         StartCoroutine(AutomaticMovement());
     }
     

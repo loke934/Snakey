@@ -7,27 +7,26 @@ using Random = UnityEngine.Random;
 public class ItemSpawn : MonoBehaviour
 {
     [SerializeField] 
-    private GameObject itemPrefab;
+    private GameObject eatableItemPrefab;
     [SerializeField] 
     private SpawnGrid gridSpawner;
     [SerializeField] 
     private PlayerInput playerInput;
 
-    private List<Vector2Int> positions;
-    private GameObject itemInScene;
-    
-    public void SpawnItem()
+    private List<Vector2Int> positionsList;
+
+    public void SpawnEatableItem()
     {
-        int index = Random.Range(0, positions.Count - 1);
-        Vector2 spawnPosition = positions[index];
-        itemInScene = Instantiate(itemPrefab, spawnPosition, Quaternion.identity);
+        int index = Random.Range(0, positionsList.Count - 1);
+        Vector2Int spawnPosition = positionsList[index];
+        GameObject itemInScene = Instantiate(eatableItemPrefab, (Vector2)spawnPosition, Quaternion.identity);
         itemInScene.transform.SetParent(transform);
-        itemInScene.GetComponent<ItemBehaviour>().OnItemEaten += SpawnItem;
+        itemInScene.GetComponent<ItemBehaviour>().OnItemEaten += SpawnEatableItem;
         playerInput.IncreaseSpeed();
     }
     void Start()
     {
-        positions = gridSpawner.GridPositionsList;
-        SpawnItem();
+        positionsList = gridSpawner.GridPositionsList;
+        SpawnEatableItem();
     }
 }

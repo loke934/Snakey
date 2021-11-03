@@ -16,17 +16,19 @@ public class SpawnGrid : MonoBehaviour
     private int gridSizeY = 15;
 
     private List<Vector2Int> gridPositionsList;
-
     public List<Vector2Int> GridPositionsList => gridPositionsList;
 
     private void SpawnTheGrid()
     {
+        int sizeX = -gridSizeX / 2;
+        int sizeY = -gridSizeY / 2;
+        
         for (int y = 0; y < gridSizeY; y++)
         {
             for (int x = 0; x < gridSizeX; x++)
             {
                 GameObject tileToSpawn;
-                if (x  == 0 || x == gridSizeX -1 || y == 0 || y == gridSizeY -1 ) //edges of grid should have walls
+                if (x  == 0 || x == gridSizeX -1 || y == 0 || y == gridSizeY -1 ) 
                 {
                     tileToSpawn = wallPrefab;
                 }
@@ -34,14 +36,12 @@ public class SpawnGrid : MonoBehaviour
                 {
                     tileToSpawn = tilePrefab;
                 }
-                Vector2 spawnPosition = new Vector2((int)-gridSizeX/2 + x, (int)-gridSizeY/2 + y);
-                GameObject tile = Instantiate(tileToSpawn, spawnPosition, Quaternion.identity);
+                Vector2Int spawnPosition = new Vector2Int(sizeX + x, sizeY + y);
+                GameObject tile = Instantiate(tileToSpawn, (Vector2)spawnPosition, Quaternion.identity);
                 tile.transform.SetParent(transform);
-
-                Vector2Int positionToAdd = new Vector2Int((int)-gridSizeX/2 + x,(int)-gridSizeY/2 + y);//use above how??
                 if (tileToSpawn == tilePrefab)
                 {
-                    gridPositionsList.Add(positionToAdd);
+                    gridPositionsList.Add(spawnPosition);
                 }
             }
         }
@@ -51,4 +51,6 @@ public class SpawnGrid : MonoBehaviour
         gridPositionsList = new List<Vector2Int>();
         SpawnTheGrid();
     }
+    //Todo CHANGE AND REMOVE WALL AND MAKE SO DIE IF OUTSIDE GRID INSTEAD
+    //Todo Method that give grid pos in world pos. Don´t need to check if pos. Calc in runtime and return bool. checks through if statement. Have all info already, calc instead of save. Return new pos with coords.
 }
