@@ -4,19 +4,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class SnakeyCollision : MonoBehaviour
+namespace Snakey
 {
-    [SerializeField] 
-    private Canvas canvas;
-    public static event Action OnGameOver;
-    
-    private void OnCollisionEnter2D(Collision2D other)
+    public class SnakeyCollision : MonoBehaviour
     {
-        if (other.gameObject.CompareTag("Wall") || other.gameObject.CompareTag("Snake"))
+        [SerializeField] 
+        private Canvas canvas;
+        public static event Action OnGameOver;
+
+        private void OnCollisionEnter2D(Collision2D other)
         {
-            OnGameOver?.Invoke();
-            canvas.gameObject.SetActive(true);
+            if (other.gameObject.CompareTag("Wall") || other.gameObject.CompareTag("Snake"))
+            {
+                OnGameOver?.Invoke();
+                canvas.gameObject.SetActive(true);
+            }
         }
+        //Todo FIX COLLISION WITH WALLS, MAKE SO OUTSIDE OF GRID OR COLLIDE WITH WALLS BUT HOW TO AVOID...
     }
-    //Todo FIX COLLISION WITH WALLS, MAKE SO OUTSIDE OF GRID OR COLLIDE WITH WALLS BUT HOW TO AVOID...
+
 }

@@ -52,5 +52,11 @@ public class SpawnGrid : MonoBehaviour
         SpawnTheGrid();
     }
     //Todo CHANGE AND REMOVE WALL AND MAKE SO DIE IF OUTSIDE GRID INSTEAD
-    //Todo Method that give grid pos in world pos. Don´t need to check if pos. Calc in runtime and return bool. checks through if statement. Have all info already, calc instead of save. Return new pos with coords.
+    //Not use static event
+    // When grid is created get the grids pos in world pos.For whole grid? Or per tile?
+    // Gridsize but not create it. class grid info world pos of a cell.
+    // Then when I want to move, I check with an if-statement if the place I want to move to is inside the grid. if its inside bounderies of pretend grid.
+    //Data oriented approach. Devide from visuals. class pure c sharp class, data and functions for grid. grid to world search for cell to spawn fruite. 
+    // Like transform.pos + transform.forward is inside grid? Return true or false.
+    //Todo Method that give grid pos in world pos. Don´t need to check if pos is in list. Calc in runtime and return bool. checks through if statement. Have all info already, calc instead of save. Return new pos with coords.
 }

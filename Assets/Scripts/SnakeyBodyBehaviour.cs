@@ -4,57 +4,63 @@ using System.Collections.Generic;
 using UnityEditorInternal.VersionControl;
 using UnityEngine;
 
-public class SnakeyBodyBehaviour : MonoBehaviour
+namespace Snakey
 {
-    [SerializeField] 
-    private GameObject snakeyBodyPartPrefab;
-    private LinkedList<Transform> snakeyBodyLL = new LinkedList<Transform>();
-    
-    private void MoveBody(Vector3 snakeHeadPosition)
+    public class SnakeyBodyBehaviour : MonoBehaviour
     {
-        if (snakeyBodyLL.Count <= 0)//only head on snake
+        [SerializeField] 
+        private GameObject snakeyBodyPartPrefab;
+        private LinkedList<Transform> snakeyBodyLL = new LinkedList<Transform>();
+        
+        private void MoveBody(Vector3 snakeHeadPosition)
         {
-            return;
-        }
-        LinkedList<Transform>.ListNode currentNode = snakeyBodyLL.Tail;
-        while (currentNode != null)
-        {
-            if (currentNode == snakeyBodyLL.Head)
+            if (snakeyBodyLL.Count <= 0)//only head on snake
             {
-                currentNode.nodeItem.position = snakeHeadPosition;
+                return;
             }
-            else
+            
+            LinkedList<Transform>.ListNode currentNode = snakeyBodyLL.Tail;
+            
+            while (currentNode != null)
             {
-                currentNode.nodeItem.position = currentNode.previousNode.nodeItem.position;
+                if (currentNode == snakeyBodyLL.Head)
+                {
+                    currentNode.nodeItem.position = snakeHeadPosition;
+                }
+                else
+                {
+                    currentNode.nodeItem.position = currentNode.previousNode.nodeItem.position;
+                }
+                currentNode = currentNode.previousNode;
             }
-            currentNode = currentNode.previousNode;
         }
-    }
-
-    public void GrowBody()
-    {
-        Vector3 position = GetTailPosition();
-        GameObject bodyPart = Instantiate(snakeyBodyPartPrefab, position, Quaternion.identity);
-        snakeyBodyLL.Add(bodyPart.transform);
-    }
-
-    private Vector3 GetTailPosition()
-    {
-        if (snakeyBodyLL.Count <= 0)
-        {
-            return transform.position;
-        }
-        return snakeyBodyLL.Tail.nodeItem.position;
-    }
-
-    public void ResetBody()
-    {
-        snakeyBodyLL.Clear();
-    }
     
-    private void Awake()
-    {
-        PlayerInput.OnMovement += MoveBody;
-        SnakeyCollision.OnGameOver += ResetBody;
+        public void GrowBody()
+        {
+            Vector3 position = GetTailPosition();
+            GameObject bodyPart = Instantiate(snakeyBodyPartPrefab, position, Quaternion.identity);
+            snakeyBodyLL.Add(bodyPart.transform);
+        }
+    
+        private Vector3 GetTailPosition()
+        {
+            if (snakeyBodyLL.Count <= 0)
+            {
+                return transform.position;
+            }
+            return snakeyBodyLL.Tail.nodeItem.position;
+        }
+    
+        public void ResetBody()
+        {
+            snakeyBodyLL.Clear();
+        }
+        
+        private void Awake()
+        {
+            PlayerInput.OnMovement += MoveBody;
+            SnakeyCollision.OnGameOver += ResetBody;
+        }
     }
 }
+

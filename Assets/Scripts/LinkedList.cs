@@ -2,59 +2,63 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LinkedList<T>
+namespace Snakey
 {
-    private ListNode head;
-    private ListNode tail;
-    private int count;
-
-    public LinkedList()
+    public class LinkedList<T>
     {
-        head = null; //same as value default?
-        tail = null;
-        count = 0;
-    }
+        private ListNode head;
+        private ListNode tail;
+        private int count;
     
-    public int Count => count;
-    public ListNode Tail => tail;
-    public ListNode Head => head;
-    
-    public class ListNode //In own script?
-    {
-        public T nodeItem;
-        public ListNode previousNode;
-        public ListNode nextNode;
-        public int index = -1; //Not using, will need? Otherwise delete
+        public LinkedList()
+        {
+            head = null; //same as value default?
+            tail = null;
+            count = 0;
+        }
         
-        public ListNode(T item, ListNode previous, ListNode next, int i)
+        public int Count => count;
+        public ListNode Tail => tail;
+        public ListNode Head => head;
+        
+        public class ListNode //In own script?
         {
-            nodeItem = item;
-            previousNode = previous;
-            nextNode = next;
-            index = i;
+            public T nodeItem;
+            public ListNode previousNode;
+            public ListNode nextNode;
+            public int index = -1; //Not using, will need? Otherwise delete
+            
+            public ListNode(T item, ListNode previous, ListNode next, int i)
+            {
+                nodeItem = item;
+                previousNode = previous;
+                nextNode = next;
+                index = i;
+            }
         }
-    }
-
-    public void Add(T item)
-    {
-        ListNode newNode = new ListNode(item, tail, null, count);
-        if (count == 0)
+    
+        public void Add(T item)
         {
-            head = newNode;
-            tail = newNode;
+            ListNode newNode = new ListNode(item, tail, null, count);
+            if (count == 0)
+            {
+                head = newNode;
+                tail = newNode;
+            }
+            else
+            {
+                tail.nextNode = newNode;
+                tail = newNode;
+            }
+            count++;
         }
-        else
+    
+        public void Clear()
         {
-            tail.nextNode = newNode;
-            tail = newNode;
+            head = null;
+            tail = null;
+            count = 0;
         }
-        count++;
-    }
-
-    public void Clear()
-    {
-        head = null;
-        tail = null;
-        count = 0;
     }
 }
+

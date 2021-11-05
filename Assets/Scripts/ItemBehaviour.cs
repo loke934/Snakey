@@ -4,17 +4,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class ItemBehaviour : MonoBehaviour
+namespace Snakey
 {
-    public event Action OnItemEaten;
-    
-    private void OnTriggerEnter2D(Collider2D other)
+    public class ItemBehaviour : MonoBehaviour
     {
-        if (other.TryGetComponent<SnakeyBodyBehaviour>(out var snakeyBodyBehaviour))
+        public event Action OnItemEaten;
+    
+        private void OnTriggerEnter2D(Collider2D other)
         {
-            snakeyBodyBehaviour.GrowBody();
-            OnItemEaten?.Invoke();
-            Destroy(gameObject);
+            if (other.TryGetComponent<SnakeyBodyBehaviour>(out var snakeyBodyBehaviour))
+            {
+                other.gameObject.TryGetComponent<PlayerInput>(out var playerInput); //How to do this in a better way?
+                playerInput.IncreaseSpeed();
+                snakeyBodyBehaviour.GrowBody();
+                OnItemEaten?.Invoke();
+                Destroy(gameObject);
+            }
         }
     }
 }
+
