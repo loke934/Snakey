@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Snakey
 {
-    public class LevelController : MonoBehaviour //Change name to grid spawner??
+    public class GridSpawner : MonoBehaviour 
     {
         [Header("Grid options")]
         [SerializeField, Range(5f, 20)] 
@@ -15,9 +15,9 @@ namespace Snakey
         [SerializeField] 
         private GameObject tilePrefab;
         
-        private int cellSize = 1;//Make serialized field for option?
+        private int cellSize = 1;
         private Grid grid;
-        private List<GameObject> tileList; //Keep? See if I want to use later
+        private List<GameObject> tileList; //Keep? See if I want to use later for some function?
 
         public Grid Grid => grid;
 

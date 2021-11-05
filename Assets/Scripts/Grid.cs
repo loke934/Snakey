@@ -9,8 +9,6 @@ namespace Snakey
         private int sizeX;
         private int sizeY;
         private int cellSize;
-        // private int width;
-        // private int height;
         private GridCell[,] gridArray;
         
         public GridCell this[int x, int y] =>  gridArray[x, y];
@@ -22,8 +20,6 @@ namespace Snakey
             sizeX = x;
             sizeY = y;
             cellSize = size;
-            // width = sizeX * cellSize;
-            // height = sizeY * cellSize;
             CreateGrid();
         }
         

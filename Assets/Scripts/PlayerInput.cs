@@ -21,43 +21,17 @@ namespace Snakey
         private Direction currentDirection;
         
         [SerializeField] 
-        private LevelController levelController;
+        private GridSpawner gridSpawner;
         [SerializeField, Range(0.1f, 1f)] 
         private float currentSpeed = 0.7f;
 
         private float maxSpeed = 0.1f;
         private bool gameOver;
         private Vector2Int currentCell;
+        public event Action<Vector3> OnMovement;
+
+        private Grid Grid => gridSpawner.Grid; //Better to make a variable and store it instead of getting it all the time?
         
-        //need this?
-        private Vector2Int currenPosition;
-        private List<Vector2Int> positionsList;
-        
-        public static event Action<Vector3> OnMovement;
-
-        private Grid Grid => levelController.Grid; //Better to make a variable and store it instead of getting it all the time?
-        
-        private Vector2Int DirectionToPosition()
-        {
-            switch (currentDirection)
-            {
-                case Direction.up:
-                    return Vector2Int.up;
-
-                case Direction.right:
-                    return Vector2Int.right;
-
-                case Direction.down:
-                    return Vector2Int.down;
-
-                case Direction.left:
-                    return Vector2Int.left;
-
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
-
         private void SetDirection()
         {
             if (Input.GetKeyDown(KeyCode.W))
@@ -140,7 +114,7 @@ namespace Snakey
                 }
                 else
                 {
-                    //Todo Invoke OnGameOver
+                    GetComponentInChildren<SnakeyCollision>().GameOver();
                 }
                 // currenPosition = new Vector2Int((int) transform.position.x, (int) transform.position.y);
                 // Vector2Int newPosition = currenPosition + DirectionToPosition();
@@ -174,7 +148,11 @@ namespace Snakey
 
         private void Awake()
         {
-            SnakeyCollision.OnGameOver += GameOver;
+            GetComponentInChildren<SnakeyCollision>().OnGameOver += GameOver;
+        }
+
+        private void Start()
+        {
             SetRandomStartPosition();
             StartCoroutine(AutomaticMovement());
         }

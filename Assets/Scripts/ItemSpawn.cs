@@ -11,11 +11,9 @@ namespace Snakey
         [SerializeField] 
         private GameObject eatableItemPrefab;
         [SerializeField] 
-        private LevelController levelController;
-        [SerializeField] 
-        private PlayerInput playerInput;
+        private GridSpawner gridSpawner;
 
-        private Grid Grid => levelController.Grid;
+        private Grid Grid => gridSpawner.Grid;
 
         private Vector3 GetRandomPosition()
         {
@@ -28,13 +26,6 @@ namespace Snakey
             GameObject item = Instantiate(eatableItemPrefab, (Vector2)position, Quaternion.identity);
             item.transform.SetParent(transform);
             item.GetComponent<ItemBehaviour>().OnItemEaten += SpawnEatableItem;
-
-            // int index = Random.Range(0, positionsList.Count - 1);
-            // Vector2Int spawnPosition = positionsList[index];
-            // GameObject itemInScene = Instantiate(eatableItemPrefab, (Vector2)spawnPosition, Quaternion.identity);
-            // itemInScene.transform.SetParent(transform);
-            // itemInScene.GetComponent<ItemBehaviour>().OnItemEaten += SpawnEatableItem;
-            // playerInput.IncreaseSpeed();
         }
         void Start()
         {

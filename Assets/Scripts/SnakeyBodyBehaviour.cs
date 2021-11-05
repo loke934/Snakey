@@ -14,7 +14,7 @@ namespace Snakey
         
         private void MoveBody(Vector3 snakeHeadPosition)
         {
-            if (snakeyBodyLL.Count <= 0)//only head on snake
+            if (snakeyBodyLL.Count <= 0)
             {
                 return;
             }
@@ -41,7 +41,7 @@ namespace Snakey
             GameObject bodyPart = Instantiate(snakeyBodyPartPrefab, position, Quaternion.identity);
             snakeyBodyLL.Add(bodyPart.transform);
         }
-    
+
         private Vector3 GetTailPosition()
         {
             if (snakeyBodyLL.Count <= 0)
@@ -58,8 +58,8 @@ namespace Snakey
         
         private void Awake()
         {
-            PlayerInput.OnMovement += MoveBody;
-            SnakeyCollision.OnGameOver += ResetBody;
+            GetComponent<PlayerInput>().OnMovement += MoveBody;
+            GetComponentInChildren<SnakeyCollision>().OnGameOver += ResetBody;
         }
     }
 }
