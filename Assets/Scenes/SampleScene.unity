@@ -157,6 +157,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gridSpawner: {fileID: 1402822956}
+  currentSpeed: 0.7
 --- !u!212 &258693782
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -216,7 +217,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 258693780}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.04079473, y: -0.10893464, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1076693673}
@@ -282,7 +283,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 766ca1f9f8e39d341895fbb6c210a335, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  snakeyBodyPart: {fileID: 5849614915181115954, guid: 346f09c373034e7468c2404c98e8fcc4, type: 3}
+  snakeyBodyPartPrefab: {fileID: 5849614915181115954, guid: 346f09c373034e7468c2404c98e8fcc4, type: 3}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -364,7 +365,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &874794040
 GameObject:
@@ -606,7 +607,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1076693672}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.61, y: 0.01, z: 0}
+  m_LocalPosition: {x: 0.64, y: 0.01, z: 0}
   m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
   m_Children: []
   m_Father: {fileID: 258693783}
@@ -752,9 +753,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ee5800fbc21df34197396e41fa0ca87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemPrefab: {fileID: 7529046708273627304, guid: 2eee89ce2fb30a046a6abffc0a0c1ed9, type: 3}
+  eatableItemPrefab: {fileID: 7529046708273627304, guid: 2eee89ce2fb30a046a6abffc0a0c1ed9, type: 3}
   gridSpawner: {fileID: 1402822956}
-  playerInput: {fileID: 258693781}
 --- !u!4 &1163061529
 Transform:
   m_ObjectHideFlags: 0
@@ -831,9 +831,10 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 1924281274}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1392247163
 GameObject:
@@ -940,13 +941,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1402822955}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8059cc6362b3f174c83162b08a6140e7, type: 3}
+  m_Script: {fileID: 11500000, guid: 3a5aaf428fcafdb4c9c32ab4bacb7e1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tilePrefab: {fileID: 3096626721806608005, guid: 71727bd94f26c4144af8d19873b691ce, type: 3}
-  wallPrefab: {fileID: 4147429881898904882, guid: 3a5597c3bd1954c4093b1dcf52a43321, type: 3}
-  gridSizeX: 20
+  gridSizeX: 15
   gridSizeY: 15
+  tilePrefab: {fileID: 3250748454875510834, guid: 5db2bbc04c27c1d4b8413218df93a826, type: 3}
 --- !u!4 &1402822957
 Transform:
   m_ObjectHideFlags: 0
@@ -1261,15 +1261,15 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1924281270}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 1549673389}
   - {fileID: 1410086663}
   - {fileID: 949534639}
-  m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_Father: {fileID: 1253163033}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}

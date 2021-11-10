@@ -17,7 +17,8 @@ namespace Snakey
         
         private int cellSize = 1;
         private Grid grid;
-        private List<GameObject> tileList; //Keep? See if I want to use later for some function?
+        
+        private List<GameObject> tileList; //Keep? See if I want to use later for some function?//2d array if keep
 
         public Grid Grid => grid;
 
@@ -40,27 +41,6 @@ namespace Snakey
             tileList = new List<GameObject>();
             MakeGridVisual();
         }
-
-        // private void Awake()
-        // {
-        //     var renderer = tilePrefab.GetComponent<SpriteRenderer>();
-        //     int cellSize = renderer.sprite.texture.height / (int)renderer.sprite.pixelsPerUnit;
-        //     grid = new Grid(gridSizeX, gridSizeY, cellSize);
-        //     tileList = new List<GameObject>();
-        //
-        //     for (int y = 0; y < gridSizeY; y++)
-        //     {
-        //         for (int x = 0; x < gridSizeX; x++)
-        //         {
-        //             Vector3 spawnPos = grid[x, y].WorldPositionOfCell;
-        //             GameObject tile = Instantiate(tilePrefab, spawnPos, Quaternion.identity);
-        //             tile.name = $"X:{x} Y:{y}";
-        //             tile.transform.SetParent(transform);
-        //             tileList.Add(tile);
-        //         }
-        //     }
-        //     
-        // }
     }
 }
 

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Snakey
 {
-    public class GridCell
+    public class GridCell //internal class in Grid?
     {
         public GridCell(int x, int y)
         {

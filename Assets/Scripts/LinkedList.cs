@@ -27,7 +27,7 @@ namespace Snakey
             public ListNode previousNode;
             public ListNode nextNode;
             public int index = -1; //Not using, will need? Otherwise delete
-            
+
             public ListNode(T item, ListNode previous, ListNode next, int i)
             {
                 nodeItem = item;

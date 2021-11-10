@@ -27,11 +27,12 @@ namespace Snakey
 
         private float maxSpeed = 0.1f;
         private bool gameOver;
-        private Vector2Int currentCell;
+        private Vector2Int currentGridCell;
         public event Action<Vector3> OnMovement;
 
-        private Grid Grid => gridSpawner.Grid; //Better to make a variable and store it instead of getting it all the time?
-        
+        private Grid grid => gridSpawner.Grid; //Better to store it instead of getting it all the time?
+        public Direction CurrentDirection => currentDirection;
+
         private void SetDirection()
         {
             if (Input.GetKeyDown(KeyCode.W))
@@ -81,16 +82,16 @@ namespace Snakey
             switch (currentDirection)
             {
                 case Direction.up:
-                    nextCell = new Vector2Int(currentCell.x, currentCell.y + 1);
+                    nextCell = new Vector2Int(currentGridCell.x, currentGridCell.y + 1);
                     break;
                 case Direction.right:
-                    nextCell = new Vector2Int(currentCell.x + 1, currentCell.y);
+                    nextCell = new Vector2Int(currentGridCell.x + 1, currentGridCell.y);
                     break;
                 case Direction.down:
-                    nextCell = new Vector2Int(currentCell.x, currentCell.y - 1);
+                    nextCell = new Vector2Int(currentGridCell.x, currentGridCell.y - 1);
                     break;
                 case Direction.left:
-                    nextCell = new Vector2Int(currentCell.x - 1, currentCell.y);
+                    nextCell = new Vector2Int(currentGridCell.x - 1, currentGridCell.y);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -105,25 +106,17 @@ namespace Snakey
                 yield return new WaitForSeconds(currentSpeed);
 
                 Vector2Int nextCell = FindNextCell();
-                if (Grid.CheckIfInsideGrid(nextCell.x, nextCell.y))
+                if (grid.CheckIfInsideGrid(nextCell.x, nextCell.y))
                 {
                     Vector3 previousPosition = transform.position;
+                    transform.position = grid[nextCell.x, nextCell.y].WorldPositionOfCell;
+                    currentGridCell = nextCell;
                     OnMovement?.Invoke(previousPosition);
-                    transform.position = Grid[nextCell.x, nextCell.y].WorldPositionOfCell;
-                    currentCell = nextCell;
                 }
                 else
                 {
-                    GetComponentInChildren<SnakeyCollision>().GameOver();
+                    GetComponentInChildren<SnakeyCollision>().GameOver(); //moving outside of grid
                 }
-                // currenPosition = new Vector2Int((int) transform.position.x, (int) transform.position.y);
-                // Vector2Int newPosition = currenPosition + DirectionToPosition();
-                // if (positionsList.Contains(newPosition))
-                // {
-                //     Vector3 previousPos = transform.position;
-                //     OnMovement?.Invoke(previousPos);
-                //     transform.position = new Vector2(newPosition.x, newPosition.y);
-                // }
             }
         }
 
@@ -142,8 +135,8 @@ namespace Snakey
 
         private void SetRandomStartPosition()
         {
-            currentCell = new Vector2Int(Random.Range(0, Grid.SizeX), Random.Range(0, Grid.SizeY));
-            transform.position = Grid[currentCell.x, currentCell.y].WorldPositionOfCell;
+            currentGridCell = new Vector2Int(Random.Range(1, grid.SizeX -1), Random.Range(1, grid.SizeY -1)); //Not to spawn at edge
+            transform.position = grid[currentGridCell.x, currentGridCell.y].WorldPositionOfCell;
         }
 
         private void Awake()

@@ -13,12 +13,12 @@ namespace Snakey
         [SerializeField] 
         private GridSpawner gridSpawner;
 
-        private Grid Grid => gridSpawner.Grid;
+        private Grid grid => gridSpawner.Grid;
 
         private Vector3 GetRandomPosition()
         {
-            Vector2Int cell = new Vector2Int(Random.Range(0, Grid.SizeX), Random.Range(0, Grid.SizeY));
-            return Grid[cell.x, cell.y].WorldPositionOfCell;
+            Vector2Int cell = new Vector2Int(Random.Range(0, grid.SizeX), Random.Range(0, grid.SizeY));
+            return grid[cell.x, cell.y].WorldPositionOfCell;
         }
         public void SpawnEatableItem()
         {

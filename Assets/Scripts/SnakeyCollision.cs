@@ -12,6 +12,7 @@ namespace Snakey
         private Canvas canvas;
 
         private bool isGameOver;
+        private const string snakeTag= "Snake";
         public event Action OnGameOver;
 
         public void GameOver()
@@ -21,7 +22,7 @@ namespace Snakey
         }
         private void OnCollisionEnter2D(Collision2D other)
         {
-            if (other.gameObject.CompareTag("Snake"))
+            if (other.gameObject.CompareTag(snakeTag))
             {
                 GameOver();
             }
