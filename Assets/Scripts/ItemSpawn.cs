@@ -11,7 +11,17 @@ namespace Snakey
         [SerializeField] 
         private GameObject eatableItemPrefab;
         [SerializeField] 
+        private GameObject bombItemPrefab;
+        [SerializeField] 
         private GridSpawner gridSpawner;
+
+        [SerializeField, Range(0, 10)] 
+        private int bombInterval = 3;
+
+        [SerializeField, Range(0f, 10f)] 
+        private float destroyBombTimer = 5f;
+
+        private int count = 0;
 
         private Grid grid => gridSpawner.Grid;
 
@@ -25,8 +35,29 @@ namespace Snakey
             Vector3 position = GetRandomPosition();
             GameObject item = Instantiate(eatableItemPrefab, (Vector2)position, Quaternion.identity);
             item.transform.SetParent(transform);
+            if (count == bombInterval)
+            {
+                SpawnBomb();
+                count = 0;
+            }
             item.GetComponent<ItemBehaviour>().OnItemEaten += SpawnEatableItem;
+            count++;
         }
+
+        private void SpawnBomb()
+        {
+            Vector3 position = GetRandomPosition();
+            GameObject bomb = Instantiate(bombItemPrefab, (Vector2)position, Quaternion.identity);
+            bomb.transform.SetParent(transform);
+            StartCoroutine(DestroyBombAfterSec(bomb));
+        }
+
+        private IEnumerator DestroyBombAfterSec(GameObject bomb)
+        {
+            yield return new WaitForSeconds(destroyBombTimer);
+            Destroy(bomb);
+        }
+
         void Start()
         {
             SpawnEatableItem();

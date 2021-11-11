@@ -52,6 +52,45 @@ namespace Snakey
             }
             count++;
         }
+
+        public List<T> GetAllAfterIndex(int i) //change name
+        {
+            List<T> nodesToRemove = new List<T>();
+            ListNode currentNode = head;
+            while (currentNode != null)
+            {
+                if (currentNode.index >= i)
+                {
+                    nodesToRemove.Add(currentNode.nodeItem);
+                }
+                currentNode = currentNode.nextNode;
+            }
+            return nodesToRemove;
+        }
+        
+        public void RemoveAllAfter(int i)
+        {
+            if (i == 0)
+            {
+                Clear();
+            }
+            else
+            {
+                ListNode currentNode = head;
+
+                while (currentNode != null)
+                {
+                    if (currentNode.index == i)
+                    {
+                        tail = currentNode.previousNode;
+                        currentNode.previousNode.nextNode = null;
+                        break;
+                    }
+                    currentNode = currentNode.nextNode;
+                }
+            }
+            
+        }
     
         public void Clear()
         {

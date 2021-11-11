@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditorInternal.VersionControl;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Snakey
 {
@@ -11,9 +12,18 @@ namespace Snakey
         [SerializeField] 
         private GameObject snakeyBodyPartPrefab;
         private LinkedList<Transform> snakeyBodyLL = new LinkedList<Transform>();
-
         private PlayerInput playerInput;
-        
+
+        public void RemoveBodyFromIndex()
+        {
+            int index = Random.Range(0, snakeyBodyLL.Count);
+            List<Transform> removeList = snakeyBodyLL.GetAllAfterIndex(index);
+            foreach (Transform thing in removeList)
+            {
+                Destroy(thing.gameObject);
+            }
+            snakeyBodyLL.RemoveAllAfter(index);
+        }
         private void MoveBody(Vector3 snakeHeadPosition)
         {
             if (snakeyBodyLL.Count <= 0)
@@ -83,10 +93,6 @@ namespace Snakey
             //GetComponent<PlayerInput>().OnMovement += MoveBody;
             GetComponentInChildren<SnakeyCollision>().OnGameOver += ResetBody;
         }
-    }
-
-    internal class Direction
-    {
     }
 }
 

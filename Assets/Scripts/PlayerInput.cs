@@ -99,6 +99,29 @@ namespace Snakey
             return nextCell;
         }
 
+        private Vector2Int FindNextCellWrap()
+        {
+            Vector2Int nextCell;
+            switch (currentDirection)
+            {
+                case Direction.up:
+                    nextCell = new Vector2Int(currentGridCell.x, 0);
+                    break;
+                case Direction.right:
+                    nextCell = new Vector2Int(0, currentGridCell.y);
+                    break;
+                case Direction.down:
+                    nextCell = new Vector2Int(currentGridCell.x, grid.SizeY -1);
+                    break;
+                case Direction.left:
+                    nextCell = new Vector2Int(grid.SizeX -1, currentGridCell.y);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+            return nextCell;
+        }
+
         private IEnumerator AutomaticMovement()
         {
             while (!gameOver)
@@ -106,17 +129,14 @@ namespace Snakey
                 yield return new WaitForSeconds(currentSpeed);
 
                 Vector2Int nextCell = FindNextCell();
-                if (grid.CheckIfInsideGrid(nextCell.x, nextCell.y))
+                if (!grid.CheckIfInsideGrid(nextCell.x, nextCell.y)) // put in find next cell? make more clean have same switch on may places
                 {
-                    Vector3 previousPosition = transform.position;
-                    transform.position = grid[nextCell.x, nextCell.y].WorldPositionOfCell;
-                    currentGridCell = nextCell;
-                    OnMovement?.Invoke(previousPosition);
+                    nextCell = FindNextCellWrap();
                 }
-                else
-                {
-                    GetComponentInChildren<SnakeyCollision>().GameOver(); //moving outside of grid
-                }
+                Vector3 previousPosition = transform.position;
+                transform.position = grid[nextCell.x, nextCell.y].WorldPositionOfCell;
+                currentGridCell = nextCell;
+                OnMovement?.Invoke(previousPosition);
             }
         }
 
