@@ -158,7 +158,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gridSpawner: {fileID: 1402822956}
-  currentSpeed: 0.7
+  currentSpeed: 0.411
 --- !u!212 &258693782
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -308,6 +308,7 @@ GameObject:
   - component: {fileID: 519420032}
   - component: {fileID: 519420031}
   - component: {fileID: 519420029}
+  - component: {fileID: 519420030}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -323,6 +324,19 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
   m_Enabled: 1
+--- !u!114 &519420030
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519420028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e8c3e16dd8a06643805c791d1f03dd2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  grid: {fileID: 0}
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0
@@ -622,7 +636,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   eatableItemPrefab: {fileID: 7529046708273627304, guid: 2eee89ce2fb30a046a6abffc0a0c1ed9, type: 3}
+  bombItemPrefab: {fileID: 1308507071667336071, guid: 07477fc59ff80da478c963591b032e85, type: 3}
   gridSpawner: {fileID: 1402822956}
+  bombInterval: 3
+  destroyBombTimer: 5
 --- !u!4 &1163061529
 Transform:
   m_ObjectHideFlags: 0
@@ -814,7 +831,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gridSizeX: 15
   gridSizeY: 15
-  tilePrefab: {fileID: 3250748454875510834, guid: 5db2bbc04c27c1d4b8413218df93a826, type: 3}
+  groundPrefab: {fileID: 3250748454875510834, guid: 5db2bbc04c27c1d4b8413218df93a826, type: 3}
+  wallPrefab: {fileID: 4975911248246205918, guid: 342a02d210b32144fa0eccdaa2a7ee2b, type: 3}
+  level: {fileID: 4900000, guid: 2818b2bb37f3ae24cafec6fe5b7c24c4, type: 3}
 --- !u!4 &1402822957
 Transform:
   m_ObjectHideFlags: 0
