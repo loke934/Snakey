@@ -8,7 +8,17 @@ namespace Snakey
 {
     public class GridSpawner : MonoBehaviour
     {
-        [Header("Grid options")] 
+        [Header("Load level from text or inspector setting")]
+        [SerializeField] 
+        private bool text;
+        [SerializeField] 
+        private bool inspector;
+        [Header("Load level from text options")]
+        [SerializeField] 
+        private TextAsset level;
+        [SerializeField] 
+        private int copyFromIndex = 2;
+        [Header("Grid options when not spawning from text")] 
         [SerializeField, Range(5f, 20)]
         private int gridSizeX = 15;
         [SerializeField, Range(5f, 20)] 
@@ -17,15 +27,10 @@ namespace Snakey
         private GameObject groundPrefab;
         [SerializeField] 
         private GameObject wallPrefab;
-        [Header("Load level from text options")]
-        [SerializeField] 
-        private TextAsset level;
-        [SerializeField] 
-        private int copyFromIndex = 2;
-
+        
         private int cellSize = 1;
         private Grid grid;
-        private List<GameObject> tileList; //Keep? See if I want to use later for some function?//2d array if keep
+        private List<GameObject> tileList; //Todo Keep? See if I want to use later for some function?//2d array if keep
 
         public Grid Grid => grid;
 
@@ -46,8 +51,18 @@ namespace Snakey
 
         private void Awake()
         {
-            grid = new Grid(level, copyFromIndex, cellSize);
-            //grid = new Grid(gridSizeX, gridSizeY, cellSize);
+            if (text)
+            {
+                grid = new Grid(level, copyFromIndex, cellSize);
+            }
+            else if(inspector)
+            {
+                grid = new Grid(gridSizeX, gridSizeY, cellSize);
+            }
+            else
+            {
+                grid = new Grid(gridSizeX, gridSizeY, cellSize);
+            }
             tileList = new List<GameObject>();
             MakeGridVisual();
         }

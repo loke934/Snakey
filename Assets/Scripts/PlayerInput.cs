@@ -22,32 +22,37 @@ namespace Snakey
         
         [SerializeField] 
         private GridSpawner gridSpawner;
+        [Header("Speed options")]
         [SerializeField, Range(0.1f, 1f)] 
         private float currentSpeed = 0.7f;
+        [SerializeField, Range(0.01f, 0.04f)] 
+        private float speedIncrease = 0.02f;
 
+        private int distToGridEdge = 2;
         private float maxSpeed = 0.1f;
         private bool gameOver;
         private Vector2Int currentGridCell;
+        private Grid grid;
+        
         public event Action<Vector3> OnMovement;
-
-        private Grid grid => gridSpawner.Grid; //Better to store it instead of getting it all the time?
+        
         public Direction CurrentDirection => currentDirection;
 
         private void SetDirection()
         {
-            if (Input.GetKeyDown(KeyCode.W))
+            if (Input.GetKeyDown(KeyCode.W) && currentDirection != Direction.down)
             {
                 currentDirection = Direction.up;
             }
-            else if (Input.GetKeyDown(KeyCode.S))
+            else if (Input.GetKeyDown(KeyCode.S) && currentDirection != Direction.up)
             {
                 currentDirection = Direction.down;
             }
-            if (Input.GetKeyDown(KeyCode.D))
+            if (Input.GetKeyDown(KeyCode.D) && currentDirection != Direction.left)
             {
                 currentDirection = Direction.right;
             }
-            else if (Input.GetKeyDown(KeyCode.A))
+            else if (Input.GetKeyDown(KeyCode.A) && currentDirection != Direction.right)
             {
                 currentDirection = Direction.left;
             }
@@ -96,10 +101,14 @@ namespace Snakey
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+            if (!grid.CheckIfInsideGrid(nextCell.x, nextCell.y)) 
+            {
+                nextCell = FindNextCellWithWrap();
+            }
             return nextCell;
         }
 
-        private Vector2Int FindNextCellWrap()
+        private Vector2Int FindNextCellWithWrap()//Todo make more clean have same switch on may places
         {
             Vector2Int nextCell;
             switch (currentDirection)
@@ -127,15 +136,13 @@ namespace Snakey
             while (!gameOver)
             {
                 yield return new WaitForSeconds(currentSpeed);
-
                 Vector2Int nextCell = FindNextCell();
-                if (!grid.CheckIfInsideGrid(nextCell.x, nextCell.y)) // put in find next cell? make more clean have same switch on may places
-                {
-                    nextCell = FindNextCellWrap();
-                }
                 Vector3 previousPosition = transform.position;
-                transform.position = grid[nextCell.x, nextCell.y].WorldPositionOfCell;
                 currentGridCell = nextCell;
+                if (!gameOver)
+                {
+                    transform.position = grid[nextCell.x, nextCell.y].WorldPositionOfCell;  
+                }
                 OnMovement?.Invoke(previousPosition);
             }
         }
@@ -144,7 +151,7 @@ namespace Snakey
         {
             if (currentSpeed > maxSpeed)
             {
-                currentSpeed -= 0.02f;
+                currentSpeed -= speedIncrease;
             }
         }
 
@@ -153,9 +160,18 @@ namespace Snakey
             gameOver = true;
         }
 
+        /// <summary>
+        /// Set random start position on non-obstacle tile and not alongside grid edge.
+        /// </summary>
         private void SetRandomStartPosition()
         {
-            currentGridCell = new Vector2Int(Random.Range(1, grid.SizeX -1), Random.Range(1, grid.SizeY -1)); //Not to spawn at edge
+            currentGridCell = new Vector2Int(Random.Range(distToGridEdge, grid.SizeX -distToGridEdge),
+             Random.Range(distToGridEdge, grid.SizeY -distToGridEdge));
+            while (grid.IsCellObstacle(currentGridCell))
+            { 
+                currentGridCell = new Vector2Int(Random.Range(distToGridEdge, grid.SizeX -distToGridEdge),
+                 Random.Range(distToGridEdge, grid.SizeY -distToGridEdge));
+            }
             transform.position = grid[currentGridCell.x, currentGridCell.y].WorldPositionOfCell;
         }
 
@@ -166,6 +182,7 @@ namespace Snakey
 
         private void Start()
         {
+            grid = gridSpawner.Grid;
             SetRandomStartPosition();
             StartCoroutine(AutomaticMovement());
         }

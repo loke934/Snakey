@@ -13,8 +13,6 @@ namespace Snakey
         private float halfGridX;
         private float halfGridY;
         private GridCell[,] gridArray;
-        private int fromSourceIndex;
-
         private Dictionary<char, CellType> cellTypeLookUp = new Dictionary<char, CellType>
         {
             {'X', CellType.Obstacle},
@@ -25,21 +23,20 @@ namespace Snakey
         public int SizeX => sizeX;
         public int SizeY => sizeY;
 
-        public Grid(TextAsset levelTextAsset, int index, int size)
+        public Grid(TextAsset levelTextAsset, int fromSourceIndex, int size)
         {
-            fromSourceIndex = index;
             string[] levelText = levelTextAsset.text.Split(
                 new string[] {"\r\n", "\r", "\n"},
                 StringSplitOptions.None
             );
-            string[] typesOfCell = new string [levelText.Length - 2];
-            Array.Copy(levelText, fromSourceIndex, 
-                typesOfCell, 0, levelText.Length - 2);
             sizeX = int.Parse(levelText[0]);
             sizeY = int.Parse(levelText[1]);
             cellSize = size;
             halfGridX = (sizeX * 0.5f) * size;
             halfGridY = (sizeY * 0.5f) * size;
+            string[] typesOfCell = new string [levelText.Length - 2];
+            Array.Copy(levelText, fromSourceIndex, 
+                typesOfCell, 0, levelText.Length - 2);
             CreateGrid(typesOfCell);
         }
 
@@ -82,6 +79,16 @@ namespace Snakey
                 return type;
             }
             throw new Exception($"Invalid cell type {letter}");
+        }
+        
+        public bool IsCellObstacle(Vector2Int cell)
+        {
+            CellType cellType = gridArray[cell.x, cell.y].CellType;
+            if (cellType == CellType.Obstacle)
+            {
+                return true;
+            }
+            return false;
         }
 
         public bool CheckIfInsideGrid(int x, int y)

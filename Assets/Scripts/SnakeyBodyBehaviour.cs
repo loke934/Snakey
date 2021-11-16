@@ -59,19 +59,20 @@ namespace Snakey
             if (snakeyBodyLL.Count <= 0)
             {
                 Vector3 position;
+                Vector3 sneakyHead = transform.position;
                 switch (playerInput.CurrentDirection)
                 {
                     case PlayerInput.Direction.up:
-                        position = new Vector3(transform.position.x, transform.position.y -1, 0f);
+                        position = new Vector3(sneakyHead.x, sneakyHead.y -1, 0f);
                         break;
                     case PlayerInput.Direction.right:
-                        position = new Vector3(transform.position.x -1 , transform.position.y, 0f);
+                        position = new Vector3(sneakyHead.x -1 , sneakyHead.y, 0f);
                         break;
                     case PlayerInput.Direction.down:
-                        position = new Vector3(transform.position.x, transform.position.y + 1, 0f);
+                        position = new Vector3(sneakyHead.x, sneakyHead.y + 1, 0f);
                         break;
                     case PlayerInput.Direction.left:
-                        position = new Vector3(transform.position.x + 1 , transform.position.y, 0f);
+                        position = new Vector3(sneakyHead.x + 1 , sneakyHead.y, 0f);
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();

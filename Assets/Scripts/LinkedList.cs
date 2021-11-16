@@ -21,13 +21,13 @@ namespace Snakey
         public ListNode Tail => tail;
         public ListNode Head => head;
         
-        public class ListNode //In own script?
+        public class ListNode 
         {
             public T nodeItem;
             public ListNode previousNode;
             public ListNode nextNode;
-            public int index = -1; //Not using, will need? Otherwise delete
-
+            public int index;
+        
             public ListNode(T item, ListNode previous, ListNode next, int i)
             {
                 nodeItem = item;
