@@ -12,6 +12,7 @@ namespace Snakey
         private int cellSize;
         private float halfGridX;
         private float halfGridY;
+        private float half = 0.5f;
         private GridCell[,] gridArray;
         private Dictionary<char, CellType> cellTypeLookUp = new Dictionary<char, CellType>
         {
@@ -19,6 +20,7 @@ namespace Snakey
             {'_', CellType.Walkable}
         };
 
+        public GridCell[,] GridArray => gridArray;
         public GridCell this[int x, int y] => gridArray[x, y];
         public int SizeX => sizeX;
         public int SizeY => sizeY;
@@ -32,8 +34,8 @@ namespace Snakey
             sizeX = int.Parse(levelText[0]);
             sizeY = int.Parse(levelText[1]);
             cellSize = size;
-            halfGridX = (sizeX * 0.5f) * size;
-            halfGridY = (sizeY * 0.5f) * size;
+            halfGridX = (sizeX * half) * size;
+            halfGridY = (sizeY * half) * size;
             string[] typesOfCell = new string [levelText.Length - 2];
             Array.Copy(levelText, fromSourceIndex, 
                 typesOfCell, 0, levelText.Length - 2);
@@ -44,8 +46,8 @@ namespace Snakey
         {
             sizeX = x;
             sizeY = y;
-            halfGridX = (x * 0.5f) * size;
-            halfGridY = (y * 0.5f) * size;
+            halfGridX = (x * half) * size;
+            halfGridY = (y * half) * size;
             cellSize = size;
             CreateGrid();
         }
@@ -57,7 +59,7 @@ namespace Snakey
             {
                 for (int y = 0; y < gridArray.GetLength(1); y++)
                 {
-                    //CellType type = cellTypes == null ? CellType.Walkable : GetCellType(cellTypes[x][y]); Readable?
+                    //Todo CellType type = cellTypes == null ? CellType.Walkable : GetCellType(cellTypes[x][y]); Readable?
                     CellType type; 
                     if (cellTypes == null)
                     {
@@ -65,13 +67,13 @@ namespace Snakey
                     }
                     else
                     {
-                        type = GetCellType(cellTypes[(cellTypes.Length- 1) -y][x]); // make into variable how did this become a jagged array?
+                        type = GetCellType(cellTypes[(cellTypes.Length- 1)-y][x]); // Todo make into variable??
                     }
                     gridArray[x, y] = new GridCell((x * cellSize) - halfGridX, (y * cellSize) - halfGridY, type);
                 }
             }
         }
-
+        
         private CellType GetCellType(char letter)
         {
             if (cellTypeLookUp.TryGetValue(letter, out CellType type))

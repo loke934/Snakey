@@ -11,7 +11,7 @@ namespace Snakey
         [Header("Bomb item options")]
         [SerializeField, Range(0, 10)] 
         private int bombInterval = 3;
-        [SerializeField, Range(0f, 10f)] 
+        [SerializeField, Range(0f, 30f)] 
         private float destroyBombTime = 5f;
         
         [SerializeField] 
@@ -20,10 +20,20 @@ namespace Snakey
         private GameObject bombItemPrefab;
         [SerializeField] 
         private GridSpawner gridSpawner;
+        [SerializeField] 
+        private AutomaticSnakey snakey;
+
+        [SerializeField] 
+        private SnakeyBodyBehaviour snakeyBodyBehaviour;
 
         private int itemCount = 0;
 
+        private GameObject eatableItem;
+        
+        private Vector2Int itemSpawnPos;
         private Grid grid => gridSpawner.Grid;
+
+        public Vector2Int ItemSpawnPos => itemSpawnPos;
 
         private Vector3 GetRandomPosition()
         {
@@ -32,21 +42,33 @@ namespace Snakey
             {
                 cell = new Vector2Int(Random.Range(0, grid.SizeX), Random.Range(0, grid.SizeY));
             }
+
+            if (snakeyBodyBehaviour.IsPositionOccupied(grid[cell.x, cell.y].WorldPositionOfCell))
+            {
+                cell = new Vector2Int(Random.Range(0, grid.SizeX), Random.Range(0, grid.SizeY));
+            }
+            itemSpawnPos = cell;
             return grid[cell.x, cell.y].WorldPositionOfCell;
         }
         
         public void SpawnEatableItem()
         {
             Vector3 position = GetRandomPosition();
-            GameObject item = Instantiate(eatableItemPrefab, (Vector2)position, Quaternion.identity);
-            item.transform.SetParent(transform);
-            if (itemCount == bombInterval)
-            {
-                SpawnBomb();
-                itemCount = 0;
-            }
-            item.GetComponent<ItemBehaviour>().OnItemEaten += SpawnEatableItem;
+            eatableItem = Instantiate(eatableItemPrefab, (Vector2)position, Quaternion.identity);
+            eatableItem.transform.SetParent(transform);
+            // if (itemCount == bombInterval) //Todo Fix bomb or remove in pathfinding 
+            // {
+            //     SpawnBomb();
+            //     itemCount = 0;
+            // }
+            eatableItem.GetComponent<EatableItemBehaviour>().OnItemEaten += ChangeItemPosition;
+            eatableItem.GetComponent<EatableItemBehaviour>().OnItemEaten += snakey.FillPositionStack;
             itemCount++;
+        }
+
+        public void ChangeItemPosition()
+        {
+            eatableItem.transform.position = GetRandomPosition();
         }
 
         private void SpawnBomb()
@@ -63,9 +85,5 @@ namespace Snakey
             Destroy(bomb);
         }
 
-        void Start()
-        {
-            SpawnEatableItem();
-        }
     }
 }

@@ -2,11 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace Snakey
 {
-    public class ItemBehaviour : MonoBehaviour
+    public class EatableItemBehaviour : MonoBehaviour
     {
         public event Action OnItemEaten;
     
@@ -18,7 +17,6 @@ namespace Snakey
                 playerInput.IncreaseSpeed();
                 snakeyBodyBehaviour.GrowBody();
                 OnItemEaten?.Invoke();
-                Destroy(gameObject);
             }
         }
     }

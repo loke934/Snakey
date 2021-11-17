@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 namespace Snakey
 {
     public class LinkedList<T>
@@ -53,19 +54,19 @@ namespace Snakey
             count++;
         }
 
-        public List<T> GetAllAfterIndex(int i) //change name
+        public List<T> GetAllAfterIndex(int i = 0) 
         {
-            List<T> nodesToRemove = new List<T>();
+            List<T> nodesToReturn = new List<T>();
             ListNode currentNode = head;
             while (currentNode != null)
             {
                 if (currentNode.index >= i)
                 {
-                    nodesToRemove.Add(currentNode.nodeItem);
+                    nodesToReturn.Add(currentNode.nodeItem);
                 }
                 currentNode = currentNode.nextNode;
             }
-            return nodesToRemove;
+            return nodesToReturn;
         }
         
         public void RemoveAllAfter(int i)
@@ -89,7 +90,21 @@ namespace Snakey
                     currentNode = currentNode.nextNode;
                 }
             }
+        }
+        
+        public bool Contains(Vector3 position)
+        {
+            ListNode currentNode = head;
             
+            while (currentNode != null)
+            {
+                if (Equals(currentNode.nodeItem, position))
+                {
+                    return true;
+                }
+                currentNode = currentNode.nextNode;
+            }
+            return false;
         }
     
         public void Clear()

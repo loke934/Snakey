@@ -27,10 +27,9 @@ namespace Snakey
         private GameObject groundPrefab;
         [SerializeField] 
         private GameObject wallPrefab;
-        
+
         private int cellSize = 1;
         private Grid grid;
-        private List<GameObject> tileList; //Todo Keep? See if I want to use later for some function?//2d array if keep
 
         public Grid Grid => grid;
 
@@ -44,13 +43,13 @@ namespace Snakey
                     GameObject cellPrefab = grid[x, y].CellType == CellType.Walkable ? groundPrefab : wallPrefab;
                     GameObject tile = Instantiate(cellPrefab, spawnPosition, Quaternion.identity);
                     tile.transform.SetParent(transform);
-                    tileList.Add(tile);
                 }
             }
         }
 
-        private void Awake()
+        public void CreateGrid()
         {
+            //Todo change else to random, or have set in start menu
             if (text)
             {
                 grid = new Grid(level, copyFromIndex, cellSize);
@@ -63,7 +62,6 @@ namespace Snakey
             {
                 grid = new Grid(gridSizeX, gridSizeY, cellSize);
             }
-            tileList = new List<GameObject>();
             MakeGridVisual();
         }
     }

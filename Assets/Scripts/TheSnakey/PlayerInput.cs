@@ -1,10 +1,6 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
-using Snakey;
 using UnityEngine;
-using Debug = UnityEngine.Debug;
 using Random = UnityEngine.Random;
 
 namespace Snakey
@@ -177,7 +173,7 @@ namespace Snakey
 
         private void Awake()
         {
-            GetComponentInChildren<SnakeyCollision>().OnGameOver += GameOver;
+            GetComponent<SnakeyCollision>().OnGameOver += GameOver;
         }
 
         private void Start()
