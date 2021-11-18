@@ -5,35 +5,58 @@ using Random = UnityEngine.Random;
 
 namespace Snakey
 {
+    public enum Direction
+    {
+        up,
+        right,
+        down,
+        left
+    }
     public class PlayerInput : MonoBehaviour
-    { 
-        public enum Direction
-        {
-            up,
-            right,
-            down,
-            left
-        }
-        private Direction currentDirection;
-        
-        [SerializeField] 
-        private GridSpawner gridSpawner;
+    {
         [Header("Speed options")]
         [SerializeField, Range(0.1f, 1f)] 
         private float currentSpeed = 0.7f;
         [SerializeField, Range(0.01f, 0.04f)] 
         private float speedIncrease = 0.02f;
-
+        
+        [Header("References")]
+        [SerializeField] 
+        private CreateGrid createGrid;
+        [SerializeField] 
+        private EatableItemBehaviour eatableItemBehaviour;
+        
+        private Direction currentDirection;
+        private Vector2Int currentGridCell;
+        private Grid grid;
         private int distToGridEdge = 2;
         private float maxSpeed = 0.1f;
         private bool gameOver;
-        private Vector2Int currentGridCell;
-        private Grid grid;
         
         public event Action<Vector3> OnMovement;
-        
         public Direction CurrentDirection => currentDirection;
 
+        private void Awake()
+        {
+            GetComponent<SnakeyCollision>().OnGameOver += GameOver;
+            eatableItemBehaviour.OnItemEaten += IncreaseSpeed;
+        }
+
+        private void Start()
+        {
+            grid = createGrid.Grid;
+            SetRandomStartPosition();
+            StartCoroutine(ContinuousMovement());
+        }
+
+        private void Update()
+        {
+            if (!gameOver)
+            {
+                SetDirection();
+                SetRotation();
+            }
+        }
         private void SetDirection()
         {
             if (Input.GetKeyDown(KeyCode.W) && currentDirection != Direction.down)
@@ -127,7 +150,7 @@ namespace Snakey
             return nextCell;
         }
 
-        private IEnumerator AutomaticMovement()
+        private IEnumerator ContinuousMovement()
         {
             while (!gameOver)
             {
@@ -169,27 +192,6 @@ namespace Snakey
                  Random.Range(distToGridEdge, grid.SizeY -distToGridEdge));
             }
             transform.position = grid[currentGridCell.x, currentGridCell.y].WorldPositionOfCell;
-        }
-
-        private void Awake()
-        {
-            GetComponent<SnakeyCollision>().OnGameOver += GameOver;
-        }
-
-        private void Start()
-        {
-            grid = gridSpawner.Grid;
-            SetRandomStartPosition();
-            StartCoroutine(AutomaticMovement());
-        }
-
-        private void Update()
-        {
-            if (!gameOver)
-            {
-                SetDirection();
-                SetRotation();
-            }
         }
     }
 }

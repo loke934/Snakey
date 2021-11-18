@@ -8,51 +8,81 @@ namespace Snakey
 {
     public class AutomaticSnakey : MonoBehaviour
     {
-        public enum Direction
-        {
-            up,
-            right,
-            down,
-            left
-        }
-        private Direction currentDirection;
+        [Header("Speed options")]
+        [SerializeField, Range(0.1f, 1f)] 
+        private float currentSpeed = 0.4f;
         
+        [Header("References")]
         [SerializeField] 
-        private GridSpawner gridSpawner;
+        private CreateGrid createGrid;
         [SerializeField] 
         private CreateGraph graphCreator;
         [SerializeField] 
         private ItemSpawn itemSpawn;
 
-        private Grid grid;
-        private Graph graph;
-        private Vertex[,] verticesArray;
-        private Vector2Int itemPos;
+        private Direction currentDirection;
         private Vector2Int currentGridCell;
         private Vector2 up;
         private Vector2 down;
         private Vector2 right;
         private Vector2 left;
-        private GridCell itemGridCell;
-        private GridCell snakeyPos;
-        private int distToGridEdge = 2;
+        private Graph graph;
+        private Vertex[,] verticesArray;
         private Stack<Vertex> positionsStack;
-        private bool gameOver = false;
+        private int distToGridEdge = 2;
+        private bool gameOver;
         public event Action<Vector3> OnMovement;
         
         public Direction CurrentDirection => currentDirection;
+        
+        public void StartSnakeyMovement()
+        {
+            graph = graphCreator.Graph;
+            verticesArray = graphCreator.VerticesArray;
+            up = new Vector2(0f,1f);
+            down = new Vector2(0f,-1f);
+            right = new Vector2(1f,0f);
+            left = new Vector2(-1f,0f);
+            SetRandomStartPosition();
+            FillPositionStack();
+            StartCoroutine(AutomaticMovement());
+            GetComponent<SnakeyCollision>().OnGameOver += GameOver;
+        }
+        
+        /// <summary>
+        /// Set random start position on non-obstacle tile and not alongside grid edge.
+        /// </summary>
+        private void SetRandomStartPosition()
+        {
+            Grid grid = createGrid.Grid;
+            currentGridCell = new Vector2Int(Random.Range(distToGridEdge, grid.SizeX -distToGridEdge),
+                Random.Range(distToGridEdge, grid.SizeY -distToGridEdge));
+            while (grid.IsCellObstacle(currentGridCell))
+            { 
+                currentGridCell = new Vector2Int(Random.Range(distToGridEdge, grid.SizeX -distToGridEdge),
+                    Random.Range(distToGridEdge, grid.SizeY -distToGridEdge));
+            }
+            transform.position = grid[currentGridCell.x, currentGridCell.y].WorldPositionOfCell;
+        }
+        
+        public void FillPositionStack()
+        {
+            Vector2Int itemPos = itemSpawn.ItemPosition;
+            positionsStack = graph.FindLeastCostBetweenVertices(verticesArray, currentGridCell, itemPos);
+            currentGridCell = itemPos;
+        }
         
         private IEnumerator AutomaticMovement()
         {
             while (!gameOver)
             {
-                yield return new WaitForSeconds(0.7f);
+                yield return new WaitForSeconds(currentSpeed);
                 Vector3 previousPosition = transform.position;
                 Vertex vertex = positionsStack.Pop();
                 GridCell nextCell = vertex.Value;
+                SetDirection(nextCell);
                 if (!gameOver)
                 {
-                    FindDirection(nextCell);
                     SetRotation();
                     transform.position = nextCell.WorldPositionOfCell;  
                 }
@@ -60,7 +90,7 @@ namespace Snakey
             }
         }
 
-        private void FindDirection(GridCell nextcell)
+        private void SetDirection(GridCell nextcell)
         {
             Vector2 direction = nextcell.WorldPositionOfCell - transform.position;
 
@@ -108,47 +138,6 @@ namespace Snakey
         public void GameOver()
         {
             gameOver = true;
-        }
-
-        /// <summary>
-        /// Fill stack with positions to move to.
-        /// </summary>
-        public void FillPositionStack()
-        {
-            itemPos = itemSpawn.ItemSpawnPos;
-            positionsStack = graph.FindLeastCostBetweenVertices(verticesArray, currentGridCell, 
-                itemPos);
-            currentGridCell = itemPos;
-        }
-        
-        /// <summary>
-        /// Set random start position on non-obstacle tile and not alongside grid edge.
-        /// </summary>
-        private void SetRandomStartPosition()
-        {
-            currentGridCell = new Vector2Int(Random.Range(distToGridEdge, grid.SizeX -distToGridEdge),
-                Random.Range(distToGridEdge, grid.SizeY -distToGridEdge));
-            while (grid.IsCellObstacle(currentGridCell))
-            { 
-                currentGridCell = new Vector2Int(Random.Range(distToGridEdge, grid.SizeX -distToGridEdge),
-                    Random.Range(distToGridEdge, grid.SizeY -distToGridEdge));
-            }
-            transform.position = grid[currentGridCell.x, currentGridCell.y].WorldPositionOfCell;
-        }
-        
-        public void StartSnakeyMovement()
-        {
-            grid = gridSpawner.Grid;
-            graph = graphCreator.Graph;
-            verticesArray = graphCreator.VerticesArray;
-            up = new Vector2(0f,1f);
-            down = new Vector2(0f,-1f);
-            right = new Vector2(1f,0f);
-            left = new Vector2(-1f,0f);
-            SetRandomStartPosition();
-            FillPositionStack();
-            StartCoroutine(AutomaticMovement());
-            GetComponent<SnakeyCollision>().OnGameOver += GameOver;
         }
     }
 }

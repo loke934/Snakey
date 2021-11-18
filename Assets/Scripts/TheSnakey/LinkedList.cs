@@ -13,7 +13,7 @@ namespace Snakey
     
         public LinkedList()
         {
-            head = null; //same as value default?
+            head = null; 
             tail = null;
             count = 0;
         }
@@ -69,7 +69,7 @@ namespace Snakey
             return nodesToReturn;
         }
         
-        public void RemoveAllAfter(int i)
+        public void RemoveAllFrom(int i)
         {
             if (i == 0)
             {
@@ -89,24 +89,10 @@ namespace Snakey
                     }
                     currentNode = currentNode.nextNode;
                 }
+                count -= (count - i);
             }
         }
-        
-        public bool Contains(Vector3 position)
-        {
-            ListNode currentNode = head;
-            
-            while (currentNode != null)
-            {
-                if (Equals(currentNode.nodeItem, position))
-                {
-                    return true;
-                }
-                currentNode = currentNode.nextNode;
-            }
-            return false;
-        }
-    
+
         public void Clear()
         {
             head = null;

@@ -7,6 +7,7 @@ namespace Snakey
 {
     public class SnakeyCollision : MonoBehaviour
     {
+        [Header("References")]
         [SerializeField] 
         private Canvas canvas;
         private bool isGameOver;

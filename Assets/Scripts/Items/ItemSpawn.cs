@@ -12,63 +12,83 @@ namespace Snakey
         [SerializeField, Range(0, 10)] 
         private int bombInterval = 3;
         [SerializeField, Range(0f, 30f)] 
-        private float destroyBombTime = 5f;
+        private float destroyInSeconds = 5f;
         
+        [Header("Prefabs and references")]
         [SerializeField] 
         private GameObject eatableItemPrefab;
         [SerializeField] 
         private GameObject bombItemPrefab;
         [SerializeField] 
-        private GridSpawner gridSpawner;
+        private CreateGrid createGrid;
         [SerializeField] 
         private AutomaticSnakey snakey;
-
         [SerializeField] 
         private SnakeyBodyBehaviour snakeyBodyBehaviour;
-
-        private int itemCount = 0;
-
+        [SerializeField]
         private GameObject eatableItem;
+
+        private Vector2Int itemPosition;
         
-        private Vector2Int itemSpawnPos;
-        private Grid grid => gridSpawner.Grid;
+        private Grid grid => createGrid.Grid;
+        private bool isManualMovement;
+        private bool isAutomaticMovement;
+        private int itemCount = 0;
+        
+        public Vector2Int ItemPosition => itemPosition;
+        public bool IsManualMovement
+        {
+            set => isManualMovement = value;
+        }
 
-        public Vector2Int ItemSpawnPos => itemSpawnPos;
+        public bool IsAutomaticMovement
+        {
+            get => isAutomaticMovement;
+            set => isAutomaticMovement = value;
+        }
 
+        public void SpawnEatableItem()
+        {
+            ChangeItemPosition();
+            eatableItem.GetComponent<EatableItemBehaviour>().OnItemEaten += ChangeItemPosition;
+            if (isAutomaticMovement)
+            {
+                eatableItem.GetComponent<EatableItemBehaviour>().OnItemEaten += snakey.FillPositionStack;
+            }
+        }
+        /// <summary>
+        /// Returns random position that is not an obstacle tile or occupied by snakey body.
+        /// </summary>
+        /// <returns>Vector3 position</returns>
         private Vector3 GetRandomPosition()
         {
             Vector2Int cell = new Vector2Int(Random.Range(0, grid.SizeX), Random.Range(0, grid.SizeY));
+            Vector3 position = grid[cell.x, cell.y].WorldPositionOfCell;
             while(grid.IsCellObstacle(cell))
             {
                 cell = new Vector2Int(Random.Range(0, grid.SizeX), Random.Range(0, grid.SizeY));
             }
 
-            if (snakeyBodyBehaviour.IsPositionOccupied(grid[cell.x, cell.y].WorldPositionOfCell))
+            if (snakeyBodyBehaviour.IsPositionOccupied(position))
             {
                 cell = new Vector2Int(Random.Range(0, grid.SizeX), Random.Range(0, grid.SizeY));
             }
-            itemSpawnPos = cell;
+            itemPosition = cell;
             return grid[cell.x, cell.y].WorldPositionOfCell;
         }
-        
-        public void SpawnEatableItem()
-        {
-            Vector3 position = GetRandomPosition();
-            eatableItem = Instantiate(eatableItemPrefab, (Vector2)position, Quaternion.identity);
-            eatableItem.transform.SetParent(transform);
-            // if (itemCount == bombInterval) //Todo Fix bomb or remove in pathfinding 
-            // {
-            //     SpawnBomb();
-            //     itemCount = 0;
-            // }
-            eatableItem.GetComponent<EatableItemBehaviour>().OnItemEaten += ChangeItemPosition;
-            eatableItem.GetComponent<EatableItemBehaviour>().OnItemEaten += snakey.FillPositionStack;
-            itemCount++;
-        }
-
+   
         public void ChangeItemPosition()
         {
             eatableItem.transform.position = GetRandomPosition();
+            if (isManualMovement)
+            {
+                if (itemCount == bombInterval) 
+                {
+                    SpawnBomb();
+                    itemCount = 0;
+                }
+                itemCount++;
+            }
         }
 
         private void SpawnBomb()
@@ -76,14 +96,13 @@ namespace Snakey
             Vector3 position = GetRandomPosition();
             GameObject bomb = Instantiate(bombItemPrefab, (Vector2)position, Quaternion.identity);
             bomb.transform.SetParent(transform);
-            StartCoroutine(DestroyBombAfterSec(bomb));
+            StartCoroutine(DestroyAfterSeconds(bomb));
         }
 
-        private IEnumerator DestroyBombAfterSec(GameObject bomb)
+        private IEnumerator DestroyAfterSeconds(GameObject item)
         {
-            yield return new WaitForSeconds(destroyBombTime);
-            Destroy(bomb);
+            yield return new WaitForSeconds(destroyInSeconds);
+            Destroy(item);
         }
-
     }
 }

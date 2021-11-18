@@ -7,15 +7,13 @@ namespace Snakey
 {
     public class EatableItemBehaviour : MonoBehaviour
     {
+        private const string snakeTag= "Snake";
         public event Action OnItemEaten;
     
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (other.TryGetComponent<SnakeyBodyBehaviour>(out SnakeyBodyBehaviour snakeyBodyBehaviour))
+            if (other.CompareTag(snakeTag))
             {
-                other.gameObject.TryGetComponent<PlayerInput>(out var playerInput); //How to do this in a better way?
-                playerInput.IncreaseSpeed();
-                snakeyBodyBehaviour.GrowBody();
                 OnItemEaten?.Invoke();
             }
         }

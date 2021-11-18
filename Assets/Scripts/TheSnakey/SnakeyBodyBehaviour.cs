@@ -10,29 +10,73 @@ namespace Snakey
     [RequireComponent(typeof(PlayerInput))]
     public class SnakeyBodyBehaviour : MonoBehaviour
     {
+        [Header("Prefabs and references")]
         [SerializeField] 
         private GameObject snakeyBodyPartPrefab;
+        [SerializeField] 
+        private EatableItemBehaviour eatableItemBehaviour;
+        
         private LinkedList<Transform> snakeyBodyLL = new LinkedList<Transform>();
         private PlayerInput playerInput;
         private AutomaticSnakey automaticSnakey;
+        private bool isManualMovement;
+        private bool isAutomaticMovement;
+        
+        public bool IsManualMovement
+        {
+            set => isManualMovement = value;
+        }
 
+        public bool IsAutomaticMovement
+        {
+            set => isAutomaticMovement = value;
+        }
+
+        private void Awake()
+        {
+            ExecuteMovementSettings();
+            GetComponentInChildren<SnakeyCollision>().OnGameOver += ResetBody;
+            eatableItemBehaviour.OnItemEaten += GrowBody;
+        }
+
+        private void ExecuteMovementSettings()
+        {
+            if (isManualMovement)
+            {
+                playerInput = GetComponent<PlayerInput>();
+                playerInput.OnMovement += MoveBody;
+            }
+            else if (isAutomaticMovement)
+            {
+                automaticSnakey = GetComponent<AutomaticSnakey>();
+                automaticSnakey.OnMovement += MoveBody;
+            }
+            else
+            {
+                isManualMovement = true;
+                isAutomaticMovement = false;
+                playerInput = GetComponent<PlayerInput>();
+                playerInput.OnMovement += MoveBody;
+            } 
+        }
+        
         public bool IsPositionOccupied(Vector3 position)
         {
             if (transform.position == position)
             {
                 return true;
             }
-
             List<Transform> list = snakeyBodyLL.GetAllAfterIndex();
-            foreach (Transform transform in list)
+            foreach (Transform node in list)
             {
-                if (transform.position == position)
+                if (node.position == position)
                 {
                     return true;
                 }
             }
             return false;
         }
+        
         public void RemoveBodyFromIndex()
         {
             int index = Random.Range(0, snakeyBodyLL.Count);
@@ -41,7 +85,7 @@ namespace Snakey
             {
                 Destroy(thing.gameObject);
             }
-            snakeyBodyLL.RemoveAllAfter(index);
+            snakeyBodyLL.RemoveAllFrom(index);
         }
         private void MoveBody(Vector3 snakeHeadPosition)
         {
@@ -77,37 +121,29 @@ namespace Snakey
         {
             if (snakeyBodyLL.Count <= 0)
             {
+                Direction currentDirection;
                 Vector3 position;
                 Vector3 sneakyHead = transform.position;
-                // switch (playerInput.CurrentDirection)
-                // {
-                //     case PlayerInput.Direction.up:
-                //         position = new Vector3(sneakyHead.x, sneakyHead.y -1, 0f);
-                //         break;
-                //     case PlayerInput.Direction.right:
-                //         position = new Vector3(sneakyHead.x -1 , sneakyHead.y, 0f);
-                //         break;
-                //     case PlayerInput.Direction.down:
-                //         position = new Vector3(sneakyHead.x, sneakyHead.y + 1, 0f);
-                //         break;
-                //     case PlayerInput.Direction.left:
-                //         position = new Vector3(sneakyHead.x + 1 , sneakyHead.y, 0f);
-                //         break;
-                //     default:
-                //         throw new ArgumentOutOfRangeException();
-                // }
-                switch (automaticSnakey.CurrentDirection)
+                if (isManualMovement)
                 {
-                    case AutomaticSnakey.Direction.up:
+                    currentDirection = playerInput.CurrentDirection;
+                }
+                else
+                {
+                    currentDirection = automaticSnakey.CurrentDirection;
+                }
+                switch (currentDirection)
+                {
+                    case Direction.up:
                         position = new Vector3(sneakyHead.x, sneakyHead.y -1, 0f);
                         break;
-                    case AutomaticSnakey.Direction.right:
+                    case Direction.right:
                         position = new Vector3(sneakyHead.x -1 , sneakyHead.y, 0f);
                         break;
-                    case AutomaticSnakey.Direction.down:
+                    case Direction.down:
                         position = new Vector3(sneakyHead.x, sneakyHead.y + 1, 0f);
                         break;
-                    case AutomaticSnakey.Direction.left:
+                    case Direction.left:
                         position = new Vector3(sneakyHead.x + 1 , sneakyHead.y, 0f);
                         break;
                     default:
@@ -121,16 +157,6 @@ namespace Snakey
         public void ResetBody()
         {
             snakeyBodyLL.Clear();
-        }
-        
-        private void Awake()
-        {
-            playerInput = GetComponent<PlayerInput>();
-            playerInput.OnMovement += MoveBody;
-            automaticSnakey = GetComponent<AutomaticSnakey>();
-            automaticSnakey.OnMovement += MoveBody;
-            //GetComponent<PlayerInput>().OnMovement += MoveBody;
-            GetComponentInChildren<SnakeyCollision>().OnGameOver += ResetBody;
         }
     }
 }
