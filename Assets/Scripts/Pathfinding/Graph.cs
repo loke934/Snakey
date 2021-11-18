@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 namespace Snakey
 {
@@ -35,20 +37,23 @@ namespace Snakey
         }
 
         public Stack<Vertex> FindLeastCostBetweenVertices(Vertex[,] array, Vector2Int start, 
-            Vector2Int target) //Add current direction and figure out 
+            Vector2Int target)  
         {
+            Vertex startVertex = array[start.x, start.y];
+            Vertex targetVertex = array[target.x, target.y];
+            Queue<Vertex> queue = new Queue<Vertex>();
+
             foreach (Vertex vertex in array)
             {
                 vertex.Distance = Mathf.Infinity;
                 vertex.IsVisited = false;
             }
-            Vertex targetVertex = array[target.x, target.y];
-            Vertex startVertex = array[start.x, start.y];
+            
             //Todo remove when all works
-            Debug.DrawLine(startVertex.Value.WorldPositionOfCell, targetVertex.Value.WorldPositionOfCell, Color.magenta, 1000f);
-            Queue<Vertex> queue = new Queue<Vertex>();
+            //Debug.DrawLine(startVertex.Value.WorldPositionOfCell, targetVertex.Value.WorldPositionOfCell, Color.magenta, 1000f);
             startVertex.Distance = 0;
             queue.Enqueue(startVertex);
+            
             while (queue.Count > 0)
             {
                 Vertex currentVertex = queue.Dequeue();
@@ -56,16 +61,24 @@ namespace Snakey
                 {
                     currentVertex.IsVisited = true;
                 }
-                
+
                 foreach (Edge edge in currentVertex.EdgesToVertex)
                 {
-                    Vertex destinationVertex = edge.DestinationVertex;
-                    float currentDistanceNCost = currentVertex.Distance + edge.Cost;
-                    if (currentDistanceNCost < destinationVertex.Distance )
+                    if (IsExclude(edge.DestinationVertex) == true)
                     {
-                        destinationVertex.Distance = currentDistanceNCost;
-                        destinationVertex.PreviousVertex = currentVertex;
-                        queue.Enqueue(destinationVertex);
+                        edge.DestinationVertex.IsVisited = true;
+                        continue;
+                    }
+                    if (IsExclude(edge.DestinationVertex) == false)
+                    {
+                        Vertex destinationVertex = edge.DestinationVertex;
+                        float currentDistanceNCost = currentVertex.Distance + edge.Cost;
+                        if (currentDistanceNCost < destinationVertex.Distance )
+                        {
+                            destinationVertex.Distance = currentDistanceNCost;
+                            destinationVertex.PreviousVertex = currentVertex;
+                            queue.Enqueue(destinationVertex);
+                        }
                     }
                 }
             }
@@ -80,8 +93,53 @@ namespace Snakey
             return stack;
         }
 
-       
+        private bool IsExclude(Vertex vertex)
+        {
+            if (vertex.Value.CellType == CellType.Obstacle)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        //Todo remove if not use
+        // private bool IsNeighbourToExclude(Direction direction, Vertex start, Vertex destination)
+        // {
+        //     Vector2 up = new Vector2(0f,1f);
+        //     Vector2 down = new Vector2(0f,-1f);
+        //     Vector2 right = new Vector2(1f,0f);
+        //     Vector2 left = new Vector2(-1f,0f);
+        //     
+        //     Vector2 dirToExclude = new Vector2(0,0);
+        //     
+        //     Direction currentDirection = direction;
+        //     
+        //     switch (currentDirection)
+        //     {
+        //         case Direction.up:
+        //             dirToExclude = down;
+        //             break;
+        //         case Direction.right:
+        //             dirToExclude = left;
+        //             break;
+        //         case Direction.down:
+        //             dirToExclude = up;
+        //             break;
+        //         case Direction.left:
+        //             dirToExclude = right;
+        //             break;
+        //     }
+        //
+        //     Vector2 dir = start.Value.WorldPositionOfCell - destination.Value.WorldPositionOfCell;
+        //
+        //     if (dir == dirToExclude)
+        //     {
+        //         Debug.Log("true");
+        //         return true;
+        //     }
+        //     Debug.Log("false");
+        //     return false;
+        // }
     }
-    
 }
 

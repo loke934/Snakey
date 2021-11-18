@@ -12,7 +12,7 @@ namespace Snakey
     
     public class GridCell
     {
-        public CellType CellType { get; }
+        public CellType CellType { get;set; }
         public Vector3 WorldPositionOfCell { get; }
     
         public GridCell(float x, float y, CellType type = CellType.Walkable)

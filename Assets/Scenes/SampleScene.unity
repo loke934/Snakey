@@ -152,10 +152,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4aff304dd97a5ed43bcd76212df5bc7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelFromText: 0
-  levelFromInspector: 1
+  levelFromText: 1
+  levelFromInspector: 0
   manualMovement: 0
-  automaticMovement: 0
+  automaticMovement: 1
   createGrid: {fileID: 1402822956}
   createGraph: {fileID: 286293597}
   itemSpawn: {fileID: 1163061528}
@@ -214,7 +214,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b22f99a2f6767042a2e5f7ba3903c9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentSpeed: 0.411
+  currentSpeed: 0.6
   speedIncrease: 0.02
   createGrid: {fileID: 1402822956}
   eatableItemBehaviour: {fileID: 1015462771}
@@ -359,6 +359,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   snakeyBodyPartPrefab: {fileID: 5849614915181115954, guid: 346f09c373034e7468c2404c98e8fcc4, type: 3}
   eatableItemBehaviour: {fileID: 1015462771}
+  createGrid: {fileID: 1402822956}
 --- !u!114 &258693788
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -371,7 +372,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e22b20f0e36ae0c40bdf861fe8d3be8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentSpeed: 0.5
+  currentSpeed: 0.4
   createGrid: {fileID: 1402822956}
   graphCreator: {fileID: 286293597}
   itemSpawn: {fileID: 1163061528}
@@ -1518,7 +1519,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1924281270}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:

@@ -15,6 +15,8 @@ namespace Snakey
         private GameObject snakeyBodyPartPrefab;
         [SerializeField] 
         private EatableItemBehaviour eatableItemBehaviour;
+        [SerializeField] 
+        private CreateGrid createGrid;
         
         private LinkedList<Transform> snakeyBodyLL = new LinkedList<Transform>();
         private PlayerInput playerInput;
@@ -37,6 +39,37 @@ namespace Snakey
             ExecuteMovementSettings();
             GetComponentInChildren<SnakeyCollision>().OnGameOver += ResetBody;
             eatableItemBehaviour.OnItemEaten += GrowBody;
+        }
+
+        private void Update()
+        {
+            //ChangeCellTypeAfterBody();
+        }
+
+        private void ChangeCellTypeAfterBody()
+        {
+            GridCell[,] array = createGrid.Grid.GridArray;
+            if (snakeyBodyLL.Count <= 0)
+            {
+                return;
+            }
+            LinkedList<Transform>.ListNode currentNode = snakeyBodyLL.Head;
+            while (currentNode != null)
+            {
+                Vector3 previousPos = currentNode.nodeItem.position;
+                int x = 0;
+                int y = 0;
+                if (transform.position != previousPos)
+                {
+                    x = Mathf.Abs((int) previousPos.x);
+                    y = Math.Abs((int) previousPos.y);
+                    array[x,y].CellType = CellType.Walkable;
+                    x = Mathf.Abs((int) currentNode.nodeItem.position.x);
+                    y = Math.Abs((int) currentNode.nodeItem.position.y);
+                    array[x,y].CellType = CellType.Obstacle;
+                }
+                currentNode = currentNode.previousNode;
+            }
         }
 
         private void ExecuteMovementSettings()
@@ -89,15 +122,20 @@ namespace Snakey
         }
         private void MoveBody(Vector3 snakeHeadPosition)
         {
+            int x = 0;
+            int y = 0;
+            GridCell[,] array = createGrid.Grid.GridArray;
             if (snakeyBodyLL.Count <= 0)
             {
                 return;
             }
             
             LinkedList<Transform>.ListNode currentNode = snakeyBodyLL.Tail;
-            
             while (currentNode != null)
             {
+                x = Mathf.Abs((int) currentNode.nodeItem.position.x);
+                y = Math.Abs((int) currentNode.nodeItem.position.y);
+                array[x,y].CellType = CellType.Walkable;
                 if (currentNode == snakeyBodyLL.Head)
                 {
                     currentNode.nodeItem.position = snakeHeadPosition;
@@ -106,8 +144,13 @@ namespace Snakey
                 {
                     currentNode.nodeItem.position = currentNode.previousNode.nodeItem.position;
                 }
+                x = Mathf.Abs((int) currentNode.nodeItem.position.x);
+                y = Math.Abs((int) currentNode.nodeItem.position.y);
+                array[x,y].CellType = CellType.Obstacle;
                 currentNode = currentNode.previousNode;
             }
+            // Debug.Log("Snek head: " + transform.position);
+            // Debug.Log("Grid cell " + array[Mathf.Abs((int)transform.position.x),Mathf.Abs((int)transform.position.y)].CellType);
         }
     
         public void GrowBody()
