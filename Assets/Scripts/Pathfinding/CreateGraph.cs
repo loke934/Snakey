@@ -13,13 +13,12 @@ namespace Snakey
 
         public Graph Graph => graph;
         public Vertex[,] VerticesArray => verticeArray;
-        public void FillGraph(Grid grid)
+        
+        public void SetUpGraph(Grid grid)
         {
-            //make corresponding 2d array but fill with vertices(that holds the grid cell),
-            //every vertex get edges (with source, target, cost). total saves in hashset in graph,
-            //and specific in hashset in the vertex.
             gridCellArray = grid.GridArray;
             verticeArray = new Vertex[gridCellArray.GetLength(0), gridCellArray.GetLength(1)];
+            
             for (int x = 0; x < gridCellArray.GetLength(0); x++)
             {
                 for (int y = 0; y < gridCellArray.GetLength(1); y++)

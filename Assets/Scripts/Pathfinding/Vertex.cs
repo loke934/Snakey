@@ -6,9 +6,8 @@ namespace Snakey
         {
             private GridCell value;
             private HashSet<Edge> _edgesToVertexToVertex;
-            private int indexInGraph;
-            
             private Vertex previousVertex;
+            private int indexInGraph;
             private float distance;
             private bool isVisited;
     
@@ -33,8 +32,7 @@ namespace Snakey
                 set => previousVertex = value;
             }
             public HashSet<Edge> EdgesToVertex => _edgesToVertexToVertex;
-            public int IndexInGraph => indexInGraph;
-            
+
             public Vertex(GridCell value, Graph graph)
             {
                 this.value = value;
@@ -44,7 +42,7 @@ namespace Snakey
             }
             
             /// <summary>
-            /// Creats a new edge between sourcevertex and destinationvertex with a cost. Adds it to the vertex hashset.
+            /// Creates a new edge between source-vertex and destination-vertex with a cost. Adds it to the vertex hashset.
             /// </summary>
             /// <param name="source"></param>
             /// <param name="destination"></param>

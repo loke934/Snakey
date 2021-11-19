@@ -24,6 +24,9 @@ namespace Snakey
         public GridCell this[int x, int y] => gridArray[x, y];
         public int SizeX => sizeX;
         public int SizeY => sizeY;
+        
+        public float HalfGridX => halfGridX;
+        public float HalfGridY => halfGridY;
 
         public Grid(TextAsset levelTextAsset, int fromSourceIndex, int size)
         {
@@ -59,7 +62,6 @@ namespace Snakey
             {
                 for (int y = 0; y < gridArray.GetLength(1); y++)
                 {
-                    //Todo CellType type = cellTypes == null ? CellType.Walkable : GetCellType(cellTypes[x][y]); Readable?
                     CellType type; 
                     if (cellTypes == null)
                     {

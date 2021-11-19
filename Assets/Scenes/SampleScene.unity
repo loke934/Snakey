@@ -214,7 +214,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b22f99a2f6767042a2e5f7ba3903c9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentSpeed: 0.6
+  currentSpeed: 0.4
   speedIncrease: 0.02
   createGrid: {fileID: 1402822956}
   eatableItemBehaviour: {fileID: 1015462771}
@@ -921,7 +921,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bombInterval: 3
   destroyInSeconds: 5
-  eatableItemPrefab: {fileID: 7529046708273627304, guid: 2eee89ce2fb30a046a6abffc0a0c1ed9, type: 3}
   bombItemPrefab: {fileID: 1308507071667336071, guid: 07477fc59ff80da478c963591b032e85, type: 3}
   createGrid: {fileID: 1402822956}
   snakey: {fileID: 258693788}

@@ -10,6 +10,7 @@ namespace Snakey
         [Header("References")]
         [SerializeField] 
         private Canvas canvas;
+        
         private bool isGameOver;
         private const string snakeTag= "Snake";
         private const string wallTag= "Wall";
@@ -20,6 +21,7 @@ namespace Snakey
             OnGameOver?.Invoke();
             canvas.gameObject.SetActive(true);
         }
+        
         private void OnCollisionEnter2D(Collision2D other)
         {
             if (other.gameObject.CompareTag(snakeTag) || other.gameObject.CompareTag(wallTag))

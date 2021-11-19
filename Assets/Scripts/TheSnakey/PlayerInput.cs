@@ -16,7 +16,7 @@ namespace Snakey
     {
         [Header("Speed options")]
         [SerializeField, Range(0.1f, 1f)] 
-        private float currentSpeed = 0.7f;
+        private float currentSpeed = 0.5f;
         [SerializeField, Range(0.01f, 0.04f)] 
         private float speedIncrease = 0.02f;
         
@@ -127,7 +127,7 @@ namespace Snakey
             return nextCell;
         }
 
-        private Vector2Int FindNextCellWithWrap()//Todo make more clean have same switch on may places
+        private Vector2Int FindNextCellWithWrap()
         {
             Vector2Int nextCell;
             switch (currentDirection)
@@ -180,16 +180,18 @@ namespace Snakey
         }
 
         /// <summary>
-        /// Set random start position on non-obstacle tile and not alongside grid edge.
+        /// Set start-position on a non-obstacle tile and not alongside grid edge.
         /// </summary>
         private void SetRandomStartPosition()
         {
-            currentGridCell = new Vector2Int(Random.Range(distToGridEdge, grid.SizeX -distToGridEdge),
-             Random.Range(distToGridEdge, grid.SizeY -distToGridEdge));
+            int x = Random.Range(distToGridEdge, grid.SizeX - distToGridEdge);
+            int y = Random.Range(distToGridEdge, grid.SizeY - distToGridEdge);
+            currentGridCell = new Vector2Int(x, y);
             while (grid.IsCellObstacle(currentGridCell))
             { 
-                currentGridCell = new Vector2Int(Random.Range(distToGridEdge, grid.SizeX -distToGridEdge),
-                 Random.Range(distToGridEdge, grid.SizeY -distToGridEdge));
+                x = Random.Range(distToGridEdge, grid.SizeX - distToGridEdge);
+                y = Random.Range(distToGridEdge, grid.SizeY - distToGridEdge);
+                currentGridCell = new Vector2Int(x, y);
             }
             transform.position = grid[currentGridCell.x, currentGridCell.y].WorldPositionOfCell;
         }

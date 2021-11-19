@@ -12,7 +12,7 @@ namespace Snakey
         private HashSet<Edge> allEdgesInGraph;
 
         public int NumberOfVertices => allVerticesInGraph.Count;
-        public int NumberOfEdges => allEdgesInGraph.Count; //Todo delete if never used
+       
         public Graph()
         {
             allVerticesInGraph = new List<Vertex>();
@@ -36,8 +36,8 @@ namespace Snakey
             allEdgesInGraph.Add(source.AddEdgeToVertex(source,destination, cost));
         }
 
-        public Stack<Vertex> FindLeastCostBetweenVertices(Vertex[,] array, Vector2Int start, 
-            Vector2Int target)  
+        public Stack<GridCell> Pathfinding(Vertex[,] array, Vector2Int start, Vector2Int target, 
+            Direction currentDirection)  
         {
             Vertex startVertex = array[start.x, start.y];
             Vertex targetVertex = array[target.x, target.y];
@@ -48,9 +48,7 @@ namespace Snakey
                 vertex.Distance = Mathf.Infinity;
                 vertex.IsVisited = false;
             }
-            
-            //Todo remove when all works
-            //Debug.DrawLine(startVertex.Value.WorldPositionOfCell, targetVertex.Value.WorldPositionOfCell, Color.magenta, 1000f);
+           
             startVertex.Distance = 0;
             queue.Enqueue(startVertex);
             
@@ -64,30 +62,44 @@ namespace Snakey
 
                 foreach (Edge edge in currentVertex.EdgesToVertex)
                 {
-                    if (IsExclude(edge.DestinationVertex) == true)
+                    Vertex oppositeDirNeighbour = null;
+                    
+                    if (currentVertex == startVertex)
                     {
-                        edge.DestinationVertex.IsVisited = true;
+                        if (IsOppositeDir(currentDirection, startVertex, edge.DestinationVertex))
+                        {
+                            oppositeDirNeighbour = edge.DestinationVertex;
+                            continue;
+                        }
+                    }
+                    
+                    if (edge.DestinationVertex == oppositeDirNeighbour || IsExclude(edge.DestinationVertex))
+                    {
                         continue;
                     }
-                    if (IsExclude(edge.DestinationVertex) == false)
+                    
+                    Vertex destinationVertex = edge.DestinationVertex;
+                    float currentDistanceNCost = currentVertex.Distance + edge.Cost;
+                    
+                    if (currentDistanceNCost < destinationVertex.Distance )
                     {
-                        Vertex destinationVertex = edge.DestinationVertex;
-                        float currentDistanceNCost = currentVertex.Distance + edge.Cost;
-                        if (currentDistanceNCost < destinationVertex.Distance )
-                        {
-                            destinationVertex.Distance = currentDistanceNCost;
-                            destinationVertex.PreviousVertex = currentVertex;
-                            queue.Enqueue(destinationVertex);
-                        }
+                        destinationVertex.Distance = currentDistanceNCost;
+                        destinationVertex.PreviousVertex = currentVertex;
+                        queue.Enqueue(destinationVertex);
                     }
                 }
             }
 
-            Stack<Vertex> stack = new Stack<Vertex>();
+            Stack<GridCell> stack = new Stack<GridCell>();
             Vertex current = targetVertex;
+
             while (current != startVertex)
             {
-                stack.Push(current);
+                if (current.Distance == Mathf.Infinity)
+                {
+                    continue;
+                }
+                stack.Push(current.Value);
                 current = current.PreviousVertex;
             }
             return stack;
@@ -101,45 +113,39 @@ namespace Snakey
             }
             return false;
         }
-
-        //Todo remove if not use
-        // private bool IsNeighbourToExclude(Direction direction, Vertex start, Vertex destination)
-        // {
-        //     Vector2 up = new Vector2(0f,1f);
-        //     Vector2 down = new Vector2(0f,-1f);
-        //     Vector2 right = new Vector2(1f,0f);
-        //     Vector2 left = new Vector2(-1f,0f);
-        //     
-        //     Vector2 dirToExclude = new Vector2(0,0);
-        //     
-        //     Direction currentDirection = direction;
-        //     
-        //     switch (currentDirection)
-        //     {
-        //         case Direction.up:
-        //             dirToExclude = down;
-        //             break;
-        //         case Direction.right:
-        //             dirToExclude = left;
-        //             break;
-        //         case Direction.down:
-        //             dirToExclude = up;
-        //             break;
-        //         case Direction.left:
-        //             dirToExclude = right;
-        //             break;
-        //     }
-        //
-        //     Vector2 dir = start.Value.WorldPositionOfCell - destination.Value.WorldPositionOfCell;
-        //
-        //     if (dir == dirToExclude)
-        //     {
-        //         Debug.Log("true");
-        //         return true;
-        //     }
-        //     Debug.Log("false");
-        //     return false;
-        // }
+        
+         private bool IsOppositeDir(Direction direction, Vertex start, Vertex destination)
+         {
+             Vector2 up = new Vector2(0f,1f);
+             Vector2 down = new Vector2(0f,-1f);
+             Vector2 right = new Vector2(1f,0f);
+             Vector2 left = new Vector2(-1f,0f);
+             Vector2 dirToExclude = new Vector2(0,0);
+             Direction currentDirection = direction;
+             
+             switch (currentDirection)
+             {
+                 case Direction.up:
+                      dirToExclude = down;
+                      break;
+                 case Direction.right:
+                     dirToExclude = left;
+                     break;
+                 case Direction.down:
+                     dirToExclude = up;
+                     break;
+                 case Direction.left:
+                     dirToExclude = right;
+                     break;
+             }
+         
+             Vector2 dir = start.Value.WorldPositionOfCell - destination.Value.WorldPositionOfCell;
+             if (dir == dirToExclude)
+             {
+                 return true;
+             }
+             return false;
+         }
     }
 }
 

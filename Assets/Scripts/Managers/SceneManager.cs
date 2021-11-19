@@ -4,16 +4,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-
-public class SceneManager : MonoBehaviour
+namespace Snakey
 {
-    public void OnApplicationQuit()
+    public class SceneManager : MonoBehaviour
     {
-        Application.Quit();
-    }
+        public void OnApplicationQuit()
+        {
+            Application.Quit();
+        }
 
-    public void Play()
-    {
-        UnityEngine.SceneManagement.SceneManager.LoadScene(0);
+        public void Play()
+        {
+            UnityEngine.SceneManagement.SceneManager.LoadScene(0);
+        }
     }
 }
+

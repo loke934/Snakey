@@ -12,10 +12,10 @@ namespace Snakey
     
     public class GridCell
     {
-        public CellType CellType { get;set; }
         public Vector3 WorldPositionOfCell { get; }
-    
-        public GridCell(float x, float y, CellType type = CellType.Walkable)
+        public CellType CellType { get; set; }
+        
+        public GridCell(float x, float y,  CellType type = CellType.Walkable)
         {
             WorldPositionOfCell = new Vector3(x, y, 0f);
             CellType = type;

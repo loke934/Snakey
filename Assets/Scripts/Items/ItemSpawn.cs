@@ -16,8 +16,6 @@ namespace Snakey
         
         [Header("Prefabs and references")]
         [SerializeField] 
-        private GameObject eatableItemPrefab;
-        [SerializeField] 
         private GameObject bombItemPrefab;
         [SerializeField] 
         private CreateGrid createGrid;
@@ -29,11 +27,10 @@ namespace Snakey
         private GameObject eatableItem;
 
         private Vector2Int itemPosition;
-        
-        private Grid grid => createGrid.Grid;
         private bool isManualMovement;
         private bool isAutomaticMovement;
-        private int itemCount = 0;
+        private int itemCount;
+        private Grid grid => createGrid.Grid;
         
         public Vector2Int ItemPosition => itemPosition;
         public bool IsManualMovement
@@ -56,28 +53,25 @@ namespace Snakey
                 eatableItem.GetComponent<EatableItemBehaviour>().OnItemEaten += snakey.FillPositionStack;
             }
         }
+        
         /// <summary>
-        /// Returns random position that is not an obstacle tile or occupied by snakey body.
+        /// Returns position that is not an obstacle tile or occupied by snakey body.
         /// </summary>
         /// <returns>Vector3 position</returns>
         private Vector3 GetRandomPosition()
         {
             Vector2Int cell = new Vector2Int(Random.Range(0, grid.SizeX), Random.Range(0, grid.SizeY));
             Vector3 position = grid[cell.x, cell.y].WorldPositionOfCell;
-            while(grid.IsCellObstacle(cell))
+            while(grid.IsCellObstacle(cell) || snakeyBodyBehaviour.IsPositionOccupied(position))
             {
                 cell = new Vector2Int(Random.Range(0, grid.SizeX), Random.Range(0, grid.SizeY));
-            }
-
-            if (snakeyBodyBehaviour.IsPositionOccupied(position))
-            {
-                cell = new Vector2Int(Random.Range(0, grid.SizeX), Random.Range(0, grid.SizeY));
+                position = grid[cell.x, cell.y].WorldPositionOfCell;
             }
             itemPosition = cell;
             return grid[cell.x, cell.y].WorldPositionOfCell;
         }
    
-        public void ChangeItemPosition()
+        private void ChangeItemPosition()
         {
             eatableItem.transform.position = GetRandomPosition();
             if (isManualMovement)

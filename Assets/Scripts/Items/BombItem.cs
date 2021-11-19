@@ -9,7 +9,7 @@ namespace Snakey
     {
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (other.TryGetComponent<SnakeyBodyBehaviour>(out SnakeyBodyBehaviour snakeyBodyBehaviour))
+            if (other.TryGetComponent(out SnakeyBodyBehaviour snakeyBodyBehaviour))
             {
                 snakeyBodyBehaviour.RemoveBodyFromIndex();
                 Destroy(gameObject);

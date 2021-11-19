@@ -63,7 +63,7 @@ namespace Snakey
         {
             createGrid.CreateTheGrid();
             createGraph.CreateTheGraph();
-            createGraph.FillGraph(createGrid.Grid);
+            createGraph.SetUpGraph(createGrid.Grid);
             itemSpawn.SpawnEatableItem();
         }
         

@@ -20,7 +20,7 @@ namespace Snakey
         [SerializeField] 
         private ItemSpawn itemSpawn;
 
-        private Direction currentDirection;
+        private Direction currentDirection = Direction.right;
         private Vector2Int currentGridCell;
         private Vector2 up;
         private Vector2 down;
@@ -28,7 +28,7 @@ namespace Snakey
         private Vector2 left;
         private Graph graph;
         private Vertex[,] verticesArray;
-        private Stack<Vertex> positionsStack;
+        private Stack<GridCell> positionsStack;
         private int distToGridEdge = 2;
         private bool gameOver;
         public event Action<Vector3> OnMovement;
@@ -55,21 +55,24 @@ namespace Snakey
         private void SetRandomStartPosition()
         {
             Grid grid = createGrid.Grid;
-            currentGridCell = new Vector2Int(Random.Range(distToGridEdge, grid.SizeX -distToGridEdge),
-                Random.Range(distToGridEdge, grid.SizeY -distToGridEdge));
+            int x = Random.Range(distToGridEdge, grid.SizeX - distToGridEdge);
+            int y = Random.Range(distToGridEdge, grid.SizeY - distToGridEdge);
+            currentGridCell = new Vector2Int(x, y);
+            
             while (grid.IsCellObstacle(currentGridCell))
             { 
-                currentGridCell = new Vector2Int(Random.Range(distToGridEdge, grid.SizeX -distToGridEdge),
-                    Random.Range(distToGridEdge, grid.SizeY -distToGridEdge));
+                x = Random.Range(distToGridEdge, grid.SizeX - distToGridEdge);
+                y = Random.Range(distToGridEdge, grid.SizeY - distToGridEdge);
+                currentGridCell = new Vector2Int(x, y);
             }
             transform.position = grid[currentGridCell.x, currentGridCell.y].WorldPositionOfCell;
         }
         
         public void FillPositionStack()
         {
-            Vector2Int itemPos = itemSpawn.ItemPosition;
-            positionsStack = graph.FindLeastCostBetweenVertices(verticesArray, currentGridCell, itemPos);
-            currentGridCell = itemPos;
+            Vector2Int targetPosition = itemSpawn.ItemPosition;
+            positionsStack = graph.Pathfinding(verticesArray, currentGridCell, targetPosition, currentDirection);
+            currentGridCell = targetPosition;
         }
         
         private IEnumerator AutomaticMovement()
@@ -78,8 +81,8 @@ namespace Snakey
             {
                 yield return new WaitForSeconds(currentSpeed);
                 Vector3 previousPosition = transform.position;
-                Vertex vertex = positionsStack.Pop();
-                GridCell nextCell = vertex.Value;
+                GridCell nextCell = positionsStack.Pop();
+                //Debug.Log(nextCell.CellType);
                 SetDirection(nextCell);
                 if (!gameOver)
                 {
@@ -90,9 +93,9 @@ namespace Snakey
             }
         }
 
-        private void SetDirection(GridCell nextcell)
+        private void SetDirection(GridCell cell)
         {
-            Vector2 direction = nextcell.WorldPositionOfCell - transform.position;
+            Vector2 direction = cell.WorldPositionOfCell - transform.position;
 
             if (direction == up)
             {
@@ -115,6 +118,7 @@ namespace Snakey
         private void SetRotation()
         {
             Quaternion rotation;
+            
             switch (currentDirection)
             {
                 case Direction.up:
