@@ -71,6 +71,10 @@ namespace Snakey
         public void FillPositionStack()
         {
             Vector2Int targetPosition = itemSpawn.ItemPosition;
+            if (positionsStack != null)
+            {
+                positionsStack.Clear();
+            }
             positionsStack = graph.Pathfinding(verticesArray, currentGridCell, targetPosition, currentDirection);
             currentGridCell = targetPosition;
         }
@@ -82,7 +86,6 @@ namespace Snakey
                 yield return new WaitForSeconds(currentSpeed);
                 Vector3 previousPosition = transform.position;
                 GridCell nextCell = positionsStack.Pop();
-                //Debug.Log(nextCell.CellType);
                 SetDirection(nextCell);
                 if (!gameOver)
                 {

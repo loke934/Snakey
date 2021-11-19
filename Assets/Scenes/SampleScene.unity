@@ -152,10 +152,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4aff304dd97a5ed43bcd76212df5bc7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelFromText: 1
+  levelFromText: 0
   levelFromInspector: 0
-  manualMovement: 0
-  automaticMovement: 1
+  manualMovement: 1
+  automaticMovement: 0
   createGrid: {fileID: 1402822956}
   createGraph: {fileID: 286293597}
   itemSpawn: {fileID: 1163061528}

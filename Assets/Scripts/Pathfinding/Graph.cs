@@ -10,6 +10,7 @@ namespace Snakey
     {
         private List<Vertex> allVerticesInGraph;
         private HashSet<Edge> allEdgesInGraph;
+        private Stack<GridCell> stack = new Stack<GridCell>();
 
         public int NumberOfVertices => allVerticesInGraph.Count;
        
@@ -39,6 +40,7 @@ namespace Snakey
         public Stack<GridCell> Pathfinding(Vertex[,] array, Vector2Int start, Vector2Int target, 
             Direction currentDirection)  
         {
+            stack.Clear();
             Vertex startVertex = array[start.x, start.y];
             Vertex targetVertex = array[target.x, target.y];
             Queue<Vertex> queue = new Queue<Vertex>();
@@ -90,7 +92,7 @@ namespace Snakey
                 }
             }
 
-            Stack<GridCell> stack = new Stack<GridCell>();
+            
             Vertex current = targetVertex;
 
             while (current != startVertex)
